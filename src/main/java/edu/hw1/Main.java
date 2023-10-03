@@ -30,6 +30,7 @@ public final class Main {
         LOGGER.info("Привет, мир!");
     }
 
+    @SuppressWarnings("MagicNumber")
     public static long minutesToSeconds(String time) {
         String[] timeArray = time.split(":");
         long seconds;
@@ -46,6 +47,7 @@ public final class Main {
         return seconds + minutes * 60;
     }
 
+    @SuppressWarnings({"ParameterAssignment", "MagicNumber"})
     public static int countDigits(int num) {
         int digitCounter = 0;
         do {
@@ -76,7 +78,7 @@ public final class Main {
         for (int i = 1; i < s.length(); i += 2) {
             ans.append(s.charAt(i)).append(s.charAt(i - 1));
         }
-        //Проверка: если строка имеет нечётный размер, то добавить
+        //Проверка: если строка имеет нечётную длину, то добавить
         //последний элемент из строки s в ans, так как в цикле он не обработается
         if (s.length() % 2 != 0) {
             ans.append(s.charAt(s.length() - 1));
@@ -84,6 +86,7 @@ public final class Main {
         return ans.toString();
     }
 
+    @SuppressWarnings({"MagicNumber", "ParameterAssignment"})
     public static boolean isPalindromeDescendant(int num) {
         int neighbor1;
         int neighbor2;
@@ -117,6 +120,7 @@ public final class Main {
         return true;
     }
 
+    @SuppressWarnings({"MagicNumber", "ParameterAssignment"})
     public static int countK(int num) {
         if (num == 6174) {
             return 0;
@@ -124,15 +128,15 @@ public final class Main {
         int numAsc = 0;
         int numDesc = 0;
         int[] numArrAsc = new int[4];
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < numArrAsc.length; i++) {
             numArrAsc[i] = num % 10;
             num /= 10;
         }
         Arrays.sort(numArrAsc);
         int rank = 1000;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < numArrAsc.length; i++) {
             numAsc += rank * numArrAsc[i];
-            numDesc += rank * numArrAsc[4 - 1 - i];
+            numDesc += rank * numArrAsc[numArrAsc.length - 1 - i];
             rank /= 10;
         }
         return 1 + countK(numDesc - numAsc);
@@ -156,6 +160,7 @@ public final class Main {
         return Integer.parseInt(shiftedStr.toString(), 2);
     }
 
+    @SuppressWarnings("MagicNumber")
     public static boolean knightBoardCapture(int[][] board) {
         int[] moveCol = {-2, -1, 1, 2, 2, 1, -1, -2};
         int[] moveRow = {-1, -2, -2, -1, 1, 2, 2, 1};
