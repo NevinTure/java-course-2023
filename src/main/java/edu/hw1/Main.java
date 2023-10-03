@@ -1,8 +1,8 @@
 package edu.hw1;
 
+import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.util.Arrays;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -157,16 +157,16 @@ public final class Main {
     }
 
     public static boolean knightBoardCapture(int[][] board) {
-        int[] moveCol = {-2,-1,1,2,2,1,-1,-2};
-        int[] moveRow = {-1,-2,-2,-1,1,2,2,1};
+        int[] moveCol = {-2, -1, 1, 2, 2, 1, -1, -2};
+        int[] moveRow = {-1, -2, -2, -1, 1, 2, 2, 1};
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
                 if (board[i][j] == 1) {
                     for (int k = 0; k < 8; k++) {
-                        if (i + moveRow[k] >= board.length ||
-                            i + moveRow[k] < 0 ||
-                            j + moveCol[k] >= board[0].length ||
-                            j + moveCol[k] < 0) {
+                        if (i + moveRow[k] >= board.length
+                            || i + moveRow[k] < 0
+                            || j + moveCol[k] >= board[0].length
+                            || j + moveCol[k] < 0) {
                             continue;
                         }
                         if (board[i + moveRow[k]][j + moveCol[k]] == 1) {
