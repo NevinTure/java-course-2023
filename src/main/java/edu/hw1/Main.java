@@ -32,6 +32,9 @@ public final class Main {
 
     @SuppressWarnings("MagicNumber")
     public static long minutesToSeconds(String time) {
+        if (time == null) {
+            return -1;
+        }
         String[] timeArray = time.split(":");
         long seconds;
         long minutes;
@@ -58,6 +61,9 @@ public final class Main {
     }
 
     public static boolean isNestable(int[] a1, int[] a2) {
+        if (a1 == null || a2 == null) {
+            return false;
+        }
         int minA1 = Integer.MAX_VALUE;
         int minA2 = Integer.MAX_VALUE;
         int maxA1 = Integer.MIN_VALUE;
@@ -86,6 +92,12 @@ public final class Main {
         return ans.toString();
     }
 
+    /*
+    Если num имеет нечётное число разрядов и оно является палиндромом -> true
+    Если num имеет нечётное число разрядов и оно не является палиндромом -> false
+    Для num с чётным числом разрядов функция вычислит, является ли число
+    или один из его потомков палиндромом
+     */
     @SuppressWarnings({"MagicNumber", "ParameterAssignment"})
     public static boolean isPalindromeDescendant(int num) {
         int neighbor1;
@@ -101,6 +113,10 @@ public final class Main {
             while (num > 0) {
                 neighbor1 = num % 10;
                 neighbor2 = num % 100 / 10;
+                //Проверка: если число имеет нечётное кол-во разрядов вернуть false
+                if (neighbor2 == 0) {
+                    return false;
+                }
                 newNum += rank * (neighbor1 + neighbor2);
                 rank *= 10;
                 num /= 100;

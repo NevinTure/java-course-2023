@@ -39,6 +39,18 @@ public class HW1Test {
     }
 
     @Test
+    void testNullVideoLength() {
+        //given
+        String lengthStr = null;
+
+        //when
+        long length = minutesToSeconds(lengthStr);
+
+        //then
+        assertThat(length).isEqualTo(-1);
+    }
+
+    @Test
     void testCountDigitsInPositiveNum() {
         //given
         int num = 10010;
@@ -92,6 +104,19 @@ public class HW1Test {
         //given
         int[] a1 = {9, 9, 8};
         int[] a2 = {8, 9};
+
+        //when
+        boolean answer = isNestable(a1, a2);
+
+        //then
+        assertThat(answer).isFalse();
+    }
+
+    @Test
+    void testIsNestableWhenNull() {
+        //given
+        int[] a1 = null;
+        int[] a2 = {8,9,1};
 
         //when
         boolean answer = isNestable(a1, a2);
