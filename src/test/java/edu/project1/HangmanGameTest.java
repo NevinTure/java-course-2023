@@ -146,7 +146,7 @@ public class HangmanGameTest {
 
         //when
         dictionary.addWord(word);
-        game.setAttempts(4);
+        game.setAttempts(attempts);
         game.start();
         for (int i = 0; i < turns.length; i++) {
             game.nextTurn(turns[i]);
