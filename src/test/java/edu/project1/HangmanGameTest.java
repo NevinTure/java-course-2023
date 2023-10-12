@@ -1,22 +1,27 @@
 package edu.project1;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class HangmanGameTest {
 
-    private static GameSession session;
+    private static HangmanGame game;
+    private static Dictionary dictionary;
 
     @BeforeAll
     public static void setUp() {
-        session = new GameSession();
+        StringBuilder output = new StringBuilder();
+        int attempts = 5;
+        dictionary = new Dictionary();
+        game = new HangmanGame(dictionary, output, attempts);
     }
 
     @BeforeEach
     public void clearDict() {
-        session.clearDict();
+        dictionary.clear();
     }
 
     @Test
@@ -25,9 +30,9 @@ public class HangmanGameTest {
         String incorrectWord = "";
 
         //when
-        session.addWordToDict(incorrectWord);
-        session.start();
-        String result = session.getCurrentState();
+        dictionary.addWord(incorrectWord);
+        game.start();
+        String result = game.getCurrentState();
 
         //then
         assertThat(result).isEqualTo("Dictionary is empty, cannot start a game!\n");
@@ -38,13 +43,14 @@ public class HangmanGameTest {
         //given
         String word = "hello";
         String input = "a";
+        int attempts = 1;
 
         //when
-        session.addWordToDict(word);
-        session.setAttempts(1);
-        session.start();
-        session.nextTurn(input);
-        String[] result = session.getCurrentState().split("\n");
+        dictionary.addWord(word);
+        game.setAttempts(attempts);
+        game.start();
+        game.nextTurn(input);
+        String[] result = game.getCurrentState().split("\n");
 
         //then
         String[] expectedResult =
@@ -57,15 +63,16 @@ public class HangmanGameTest {
         //given
         String word = "hello";
         String[] turns = {"h", "e", "l", "O"};
+        int attempts = 1;
 
         //when
-        session.addWordToDict(word);
-        session.setAttempts(1);
-        session.start();
+        dictionary.addWord(word);
+        game.setAttempts(attempts);
+        game.start();
         for (int i = 0; i < turns.length; i++) {
-            session.nextTurn(turns[i]);
+            game.nextTurn(turns[i]);
         }
-        String[] result = session.getCurrentState().split("\n");
+        String[] result = game.getCurrentState().split("\n");
 
         //then
         String[] expectedResult = {"Guess a letter:", "Hit!", "", "The word: h****", "",
@@ -81,15 +88,16 @@ public class HangmanGameTest {
         //given
         String word = "hello";
         String[] turns = {"a", "b", "c", "h", "d", "t"};
+        int attempts = 4;
 
         //when
-        session.addWordToDict(word);
-        session.setAttempts(4);
-        session.start();
+        dictionary.addWord(word);
+        game.setAttempts(attempts);
+        game.start();
         for (int i = 0; i < turns.length; i++) {
-            session.nextTurn(turns[i]);
+            game.nextTurn(turns[i]);
         }
-        String[] result = session.getCurrentState().split("\n");
+        String[] result = game.getCurrentState().split("\n");
 
         //then
         String[] expectedResult = {
@@ -107,15 +115,16 @@ public class HangmanGameTest {
         //given
         String word = "a";
         String[] turns = {"aa", "exittt", "", "right letter", "a"};
+        int attempts = 1;
 
         //when
-        session.addWordToDict(word);
-        session.setAttempts(1);
-        session.start();
+        dictionary.addWord(word);
+        game.setAttempts(attempts);
+        game.start();
         for (int i = 0; i < turns.length; i++) {
-            session.nextTurn(turns[i]);
+            game.nextTurn(turns[i]);
         }
-        String[] result = session.getCurrentState().split("\n");
+        String[] result = game.getCurrentState().split("\n");
 
         //then
         String[] expectedResult = {"Guess a letter:",
@@ -133,15 +142,16 @@ public class HangmanGameTest {
         String word = "hello";
         //                  stop word \/
         String[] turns = {"a", "b", "exit", "t"};
+        int attempts = 4;
 
         //when
-        session.addWordToDict(word);
-        session.setAttempts(4);
-        session.start();
+        dictionary.addWord(word);
+        game.setAttempts(4);
+        game.start();
         for (int i = 0; i < turns.length; i++) {
-            session.nextTurn(turns[i]);
+            game.nextTurn(turns[i]);
         }
-        String[] result = session.getCurrentState().split("\n");
+        String[] result = game.getCurrentState().split("\n");
 
         //then
         String[] expectedResult = {

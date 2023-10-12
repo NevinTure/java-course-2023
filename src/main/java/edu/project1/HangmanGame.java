@@ -123,4 +123,8 @@ public class HangmanGame {
     public void setAttempts(int attempts) {
         this.attempts = attempts;
     }
+
+    public String getCurrentState() {
+        return output.toString();
+    }
 }
