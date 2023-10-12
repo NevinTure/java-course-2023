@@ -102,26 +102,19 @@ public final class Main {
     public static boolean isPalindromeDescendant(int num) {
         int neighbor1;
         int neighbor2;
-        int newNum;
-        int rank;
+        StringBuilder newNumStr = new StringBuilder();
         while (num > 10) {
             if (isPalindrome(num)) {
                 return true;
             }
-            newNum = 0;
-            rank = 1;
+            newNumStr.setLength(0);
             while (num > 0) {
                 neighbor1 = num % 10;
                 neighbor2 = num % 100 / 10;
-                //Проверка: если число имеет нечётное кол-во разрядов вернуть false
-                if (neighbor2 == 0) {
-                    return false;
-                }
-                newNum += rank * (neighbor1 + neighbor2);
-                rank *= 10;
+                newNumStr.insert(0, neighbor1 + neighbor2);
                 num /= 100;
             }
-            num = newNum;
+            num = Integer.parseInt(newNumStr.toString());
         }
         return false;
     }

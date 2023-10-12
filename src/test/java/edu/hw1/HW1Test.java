@@ -1,6 +1,8 @@
 package edu.hw1;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import static edu.hw1.Main.countDigits;
 import static edu.hw1.Main.countK;
 import static edu.hw1.Main.fixString;
@@ -141,27 +143,21 @@ public class HW1Test {
         assertThat(answer).containsExactly(correctAnswer);
     }
 
-    @Test
-    void testIsPalindromeDescendantWhenTrue() {
-        //given
-        int num = 11211230;
-
+    @ParameterizedTest
+    @ValueSource(ints = {11211230, 1010, 4655, 111, 1001})
+    void testIsPalindromeDescendantWhenTrue(int num) {
         //when
         boolean answer = isPalindromeDescendant(num);
-        //11211230 -> 2333 -> 56 -> 11
 
         //then
         assertThat(answer).isTrue();
     }
 
-    @Test
-    void testIsPalindromeDescendantWhenFalse() {
-        //given
-        int num = 14132231;
-
+    @ParameterizedTest
+    @ValueSource(ints = {14132231, 193, 1093, 8882})
+    void testIsPalindromeDescendantWhenFalse(int num) {
         //when
         boolean answer = isPalindromeDescendant(num);
-        //14132231 -> 5444 -> 98
 
         //then
         assertThat(answer).isFalse();
