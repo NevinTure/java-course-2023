@@ -18,6 +18,10 @@ public class HangmanGame {
         this.output = output;
     }
 
+    public HangmanGame(Dictionary dictionary, StringBuilder output) {
+        this(dictionary, output, 0);
+    }
+
     public void start() {
         if (isStarted) {
             output.append("Game already started!\n");

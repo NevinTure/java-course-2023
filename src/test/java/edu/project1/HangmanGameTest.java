@@ -11,12 +11,12 @@ public class HangmanGameTest {
     private static HangmanGame game;
     private static Dictionary dictionary;
 
+
     @BeforeAll
     public static void setUp() {
         StringBuilder output = new StringBuilder();
-        int attempts = 5;
         dictionary = new Dictionary();
-        game = new HangmanGame(dictionary, output, attempts);
+        game = new HangmanGame(dictionary, output);
     }
 
     @BeforeEach
