@@ -4,5 +4,4 @@ import edu.hw2.connections_problem.connections.Connection;
 
 public interface ConnectionManager {
     Connection getConnection();
-
 }

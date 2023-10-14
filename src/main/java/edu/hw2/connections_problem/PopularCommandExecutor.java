@@ -17,7 +17,7 @@ public final class PopularCommandExecutor {
         tryExecute("apt update && apt upgrade -y");
     }
 
-    void tryExecute(String command) {
+    public void tryExecute(String command) {
         int attempts = 0;
         Throwable cause = null;
         while (attempts < maxAttempts) {

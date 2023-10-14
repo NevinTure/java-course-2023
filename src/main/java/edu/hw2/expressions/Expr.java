@@ -10,25 +10,29 @@ public sealed interface Expr {
             return value;
         }
     }
-    public record Negate(Constant value) implements Expr {
+
+    public record Negate(Expr value) implements Expr {
         @Override
         public double evaluate() {
             return -value.evaluate();
         }
     }
-    public record Exponent(Constant base, double exp) implements Expr {
+
+    public record Exponent(Expr base, double exp) implements Expr {
         @Override
         public double evaluate() {
             return Math.pow(base.evaluate(), exp);
         }
     }
-    public record Addition(Constant a, Constant b) implements Expr {
+
+    public record Addition(Expr a, Expr b) implements Expr {
         @Override
         public double evaluate() {
             return a.evaluate() + b.evaluate();
         }
     }
-    public record Multiplication(Constant a, Constant b) implements Expr {
+
+    public record Multiplication(Expr a, Expr b) implements Expr {
         @Override
         public double evaluate() {
             return a.evaluate() * b.evaluate();

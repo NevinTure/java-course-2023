@@ -5,7 +5,7 @@ public class WhoCalledUtils {
     private WhoCalledUtils() {
     }
 
-    public CallingInfo callingInfo() {
+    public static CallingInfo callingInfo() {
         Throwable stackTraceSupplier = new Exception();
         StackTraceElement callerStackElement = stackTraceSupplier.getStackTrace()[1];
         return new CallingInfo(
