@@ -116,8 +116,8 @@ public class HW2Test {
     @Test
     void testCommandExecutorWithDefaultManagerWhenFailed() {
         //given
-        int percentOfFailure = 100;
-        int connectionPof = 100;
+        int percentOfFailure = 1;
+        int connectionPof = 1;
         ConnectionManager manager = new DefaultConnectionManager(
             percentOfFailure,
             connectionPof
@@ -138,7 +138,7 @@ public class HW2Test {
     @Test
     void testCommandExecutorWithFaultyManagerWhenFailed() {
         //given
-        int connectionPof = 100;
+        int connectionPof = 1;
         ConnectionManager manager = new FaultyConnectionManager(
             connectionPof
         );

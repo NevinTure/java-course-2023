@@ -5,14 +5,14 @@ import edu.hw2.connections_problem.connections.FaultyConnection;
 
 public class FaultyConnectionManager implements ConnectionManager {
 
-    private static final int DEFAULT_CONNECTION_PERCENT_OF_FAILURE = 30;
-    private int connectionPof;
+    private static final double DEFAULT_CONNECTION_PROBABILITY_OF_FAILURE = 0.3;
+    private double connectionPof;
 
     public FaultyConnectionManager() {
-        connectionPof = DEFAULT_CONNECTION_PERCENT_OF_FAILURE;
+        connectionPof = DEFAULT_CONNECTION_PROBABILITY_OF_FAILURE;
     }
 
-    public FaultyConnectionManager(int connectionPof) {
+    public FaultyConnectionManager(double connectionPof) {
         setConnectionPof(connectionPof);
     }
 
@@ -22,9 +22,9 @@ public class FaultyConnectionManager implements ConnectionManager {
     }
 
     @SuppressWarnings("MagicNumber")
-    public void setConnectionPof(int connectionPof) {
-        if (connectionPof < 0 || connectionPof > 100) {
-            throw new IllegalArgumentException("Percent must be in range [0..100]!");
+    public void setConnectionPof(double connectionPof) {
+        if (connectionPof < 0 || connectionPof > 1.0) {
+            throw new IllegalArgumentException("Probability value must be in range [0; 1]!");
         }
         this.connectionPof = connectionPof;
     }

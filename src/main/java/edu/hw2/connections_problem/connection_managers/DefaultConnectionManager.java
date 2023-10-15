@@ -5,46 +5,45 @@ import edu.hw2.connections_problem.connections.FaultyConnection;
 import edu.hw2.connections_problem.connections.StableConnection;
 
 public class DefaultConnectionManager implements ConnectionManager {
-    private int percentOfFailure;
-    private int connectionPof;
-    private final static int DEFAULT_PERCENT_OF_FAILURE = 30;
-    private final static int DEFAULT_CONNECTION_PERCENT_OF_FAILURE = 30;
+    private double probabilityOfFailure;
+    private double connectionPof;
+    private final static double DEFAULT_PROBABILITY_OF_FAILURE = 0.3;
+    private final static double DEFAULT_CONNECTION_PROBABILITY_OF_FAILURE = 0.3;
 
     public DefaultConnectionManager() {
-        percentOfFailure = DEFAULT_PERCENT_OF_FAILURE;
-        connectionPof = DEFAULT_CONNECTION_PERCENT_OF_FAILURE;
+        probabilityOfFailure = DEFAULT_PROBABILITY_OF_FAILURE;
+        connectionPof = DEFAULT_CONNECTION_PROBABILITY_OF_FAILURE;
     }
 
-    public DefaultConnectionManager(int percentOfFailure, int connectionPof) {
-        setPercentOfFailure(percentOfFailure);
+    public DefaultConnectionManager(double probabilityOfFailure, double connectionPof) {
+        setProbabilityOfFailure(probabilityOfFailure);
         setConnectionPof(connectionPof);
     }
 
-    @SuppressWarnings("MagicNumber")
     @Override
     public Connection getConnection() {
-        int percent = (int) (Math.random() * 100);
-        if (percent < percentOfFailure) {
+        double probability = Math.random();
+        if (probability < probabilityOfFailure) {
             return new FaultyConnection(connectionPof);
         } else {
             return new StableConnection();
         }
     }
 
-    public void setPercentOfFailure(int percentOfFailure) {
-        checkPercentValue(percentOfFailure);
-        this.percentOfFailure = percentOfFailure;
+    public void setProbabilityOfFailure(double probabilityOfFailure) {
+        checkProbabilityValue(probabilityOfFailure);
+        this.probabilityOfFailure = probabilityOfFailure;
     }
 
-    public void setConnectionPof(int connectionPof) {
-        checkPercentValue(connectionPof);
+    public void setConnectionPof(double connectionPof) {
+        checkProbabilityValue(connectionPof);
         this.connectionPof = connectionPof;
     }
 
     @SuppressWarnings("MagicNumber")
-    private void checkPercentValue(int percent) {
-        if (percent < 0 || percent > 100) {
-            throw new IllegalArgumentException("Percent value must be in range [0..100]!");
+    private void checkProbabilityValue(double probability) {
+        if (probability < 0 || probability > 1.0) {
+            throw new IllegalArgumentException("Probability value must be in range [0; 1]!");
         }
     }
 }

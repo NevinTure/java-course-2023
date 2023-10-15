@@ -1,35 +1,38 @@
 package edu.hw2.connections_problem.connections;
 
 import edu.hw2.connections_problem.exceptions.ConnectionException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FaultyConnection implements Connection {
 
-    private int percentOfFailure;
-    private final static int DEFAULT_PERCENT_OF_FAILURE = 30;
+    private double probabilityOfFailure;
+    private final static double DEFAULT_PROBABILITY_OF_FAILURE = 0.3;
+    private final static Logger LOGGER = LogManager.getLogger();
 
     public FaultyConnection() {
-        percentOfFailure = DEFAULT_PERCENT_OF_FAILURE;
+        probabilityOfFailure = DEFAULT_PROBABILITY_OF_FAILURE;
     }
 
-    public FaultyConnection(int percentOfFailure) {
-        setPercentOfFailure(percentOfFailure);
+    public FaultyConnection(double probabilityOfFailure) {
+        setProbabilityOfFailure(probabilityOfFailure);
     }
 
-    @SuppressWarnings("MagicNumber")
     @Override
     public void execute(String command) {
-        int percent = (int) (Math.random() * 100);
-        if (percent < percentOfFailure) {
+        double probability = Math.random();
+        if (probability < probabilityOfFailure) {
             throw new ConnectionException();
         }
+        LOGGER.info(String.format("Command '%s' executed successfully!", command));
     }
 
     @SuppressWarnings("MagicNumber")
-    public void setPercentOfFailure(int percentOfFailure) {
-        if (percentOfFailure < 0 || percentOfFailure > 100) {
-            throw new IllegalArgumentException("Percent value must be in range [0..100]!");
+    public void setProbabilityOfFailure(double probabilityOfFailure) {
+        if (probabilityOfFailure < 0 || probabilityOfFailure > 1.0) {
+            throw new IllegalArgumentException("Probability value must be in range [0; 1]!");
         }
-        this.percentOfFailure = percentOfFailure;
+        this.probabilityOfFailure = probabilityOfFailure;
     }
 
     @Override
