@@ -74,10 +74,10 @@ public class HW2Test {
     @Test
     void testCommandExecutorWithDefaultManagerWhenSuccessful() {
         //given
-        int percentOfFailure = 0;
+        int probabilityOfFailure = 0;
         int connectionPof = 0;
         ConnectionManager manager = new DefaultConnectionManager(
-            percentOfFailure,
+            probabilityOfFailure,
             connectionPof
         );
         int maxAttempts = 1;
@@ -116,10 +116,10 @@ public class HW2Test {
     @Test
     void testCommandExecutorWithDefaultManagerWhenFailed() {
         //given
-        int percentOfFailure = 1;
+        int probabilityOfFailure = 1;
         int connectionPof = 1;
         ConnectionManager manager = new DefaultConnectionManager(
-            percentOfFailure,
+            probabilityOfFailure,
             connectionPof
         );
         int maxAttempts = 1;
