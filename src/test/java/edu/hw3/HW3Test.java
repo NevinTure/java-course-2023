@@ -1,8 +1,14 @@
 package edu.hw3;
 
 import edu.hw3.contacts_problem.Contact;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import edu.hw3.stock_market_problem.Stock;
+import edu.hw3.stock_market_problem.StockMarket;
+import edu.hw3.stock_market_problem.StockMarketImpl;
+import edu.hw3.tree_and_null.ComparatorWithNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -180,5 +186,35 @@ public class HW3Test {
         //then
         assertThatIllegalArgumentException()
             .isThrownBy(() -> parseContacts(contactStrs, sortOrder));
+    }
+
+    @Test
+    void testStockMarket() {
+        //given
+        StockMarket market = new StockMarketImpl();
+
+        //when
+        market.add(new Stock(1));
+        market.add(new Stock(2));
+        market.add(new Stock(3));
+        Stock result = market.mostValuableStock();
+
+        //then
+        Stock expectedResult = new Stock(3);
+        assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void testComparatorWithNull() {
+        //given
+        Comparator<String> comparator = new ComparatorWithNull<>();;
+        TreeMap<String, String> tree = new TreeMap<>(comparator);;
+
+        //when
+        tree.put(null, "test");
+        boolean result = tree.containsKey(null);
+
+        //then
+        assertThat(result).isTrue();
     }
 }
