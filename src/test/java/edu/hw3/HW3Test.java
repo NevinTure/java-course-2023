@@ -1,20 +1,25 @@
 package edu.hw3;
 
 import edu.hw3.contacts_problem.Contact;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import edu.hw3.iterator_problem.BackwardIterator;
 import edu.hw3.stock_market_problem.Stock;
 import edu.hw3.stock_market_problem.StockMarket;
 import edu.hw3.stock_market_problem.StockMarketImpl;
 import edu.hw3.tree_and_null.ComparatorWithNull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.LinkedBlockingQueue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import static edu.hw3.contacts_problem.Main.parseContacts;
+import static edu.hw3.contacts_problem.ContactBook.parseContacts;
 import static edu.hw3.task_1_to_4.Main.atbash;
 import static edu.hw3.task_1_to_4.Main.clusterize;
 import static edu.hw3.task_1_to_4.Main.convertToRoman;
@@ -95,6 +100,26 @@ public class HW3Test {
             )),
             Arguments.of(new String[0], List.of()),
             Arguments.of(null, List.of())
+        };
+    }
+
+    private static Arguments[] backwardIteratorParams() {
+        return new Arguments[] {
+            Arguments.of(
+                List.of(1, 2, 3),
+                List.of(3, 2, 1)
+            ),
+            Arguments.of(
+                new LinkedHashSet<>(
+                    List.of("a", "b", "c")),
+                List.of("c", "b", "a")
+            ),
+            Arguments.of(
+                new LinkedBlockingQueue<>(
+                    List.of(1, 2, 3)),
+                List.of(3, 2, 1)
+            ),
+            Arguments.of(List.of(1), List.of(1))
         };
     }
 
@@ -216,5 +241,24 @@ public class HW3Test {
 
         //then
         assertThat(result).isTrue();
+    }
+
+    @ParameterizedTest
+    @MethodSource("backwardIteratorParams")
+    <T> void testBackwardIterator(
+        Collection<T> collection,
+        List<T> expectedResult
+    ) {
+        //given
+        BackwardIterator<T> backwardIterator = new BackwardIterator<>(collection);
+
+        //when
+        List<T> result = new ArrayList<>();
+        while (backwardIterator.hasPrev()) {
+            result.add(backwardIterator.prev());
+        }
+
+        //then
+        assertThat(result).containsExactlyElementsOf(expectedResult);
     }
 }

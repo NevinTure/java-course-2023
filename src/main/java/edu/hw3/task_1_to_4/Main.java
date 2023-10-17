@@ -7,11 +7,14 @@ import java.util.Map;
 
 public class Main {
 
+    private Main() {
+    }
+
     public static String atbash(String str) {
         StringBuilder ans = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if (Character.isLetter(c)) {
+            if (isLatinLetter(c)) {
                 if (Character.isLowerCase(c)) {
                     ans.append((char) ('a' + 'z' - c));
                 } else {
@@ -24,6 +27,11 @@ public class Main {
         return ans.toString();
     }
 
+    private static boolean isLatinLetter(char c) {
+        return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z');
+    }
+
+    @SuppressWarnings("MultipleStringLiterals")
     public static List<String> clusterize(String str) {
         if (str == null) {
             throw new IllegalArgumentException("Input must be not null!");
@@ -66,6 +74,7 @@ public class Main {
         return ans;
     }
 
+    @SuppressWarnings({"MagicNumber", "ParameterAssignment"})
     public static String convertToRoman(int num) {
         Map<Integer, String> nums = new HashMap<>();
         nums.put(0, "");

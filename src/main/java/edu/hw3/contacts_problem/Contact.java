@@ -1,7 +1,7 @@
 package edu.hw3.contacts_problem;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 public class Contact implements Comparable<Contact> {
     private String name;
@@ -55,14 +55,18 @@ public class Contact implements Comparable<Contact> {
     }
 
     @Override public String toString() {
-        return (name != null ? name : "") +
-            (name != null && surname != null ? " " : "") +
-            (surname != null ? surname : "");
+        return (name != null ? name : "")
+            + (name != null && surname != null ? " " : "")
+            + (surname != null ? surname : "");
     }
 
     @Override public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Contact contact = (Contact) o;
         return Objects.equals(name, contact.name) && Objects.equals(surname, contact.surname);
     }

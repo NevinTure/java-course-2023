@@ -4,18 +4,21 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class Main {
+public class ContactBook {
+
+    private ContactBook() {
+    }
+
     private final static String ASCENDING_ORDER = "ASC";
     private final static String DESCENDING_ORDER = "DESC";
 
     public static List<Contact> parseContacts(String[] contactStrs, String sortOrder) {
         if (contactStrs == null || contactStrs.length == 0) {
-
             return List.of();
         }
         return Arrays
             .stream(contactStrs)
-            .map(Main::parseContact)
+            .map(ContactBook::parseContact)
             .sorted(getParseSortOrder(sortOrder))
             .toList();
     }

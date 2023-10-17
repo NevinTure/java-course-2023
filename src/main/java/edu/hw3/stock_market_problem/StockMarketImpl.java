@@ -33,7 +33,7 @@ public class StockMarketImpl implements StockMarket {
         return storage.peek();
     }
 
-    public void setStockComparator(Comparator<Stock> stockComparator) {
-        this.stockComparator = stockComparator;
+    public Comparator<Stock> getStockComparator() {
+        return stockComparator;
     }
 }
