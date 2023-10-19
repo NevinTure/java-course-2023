@@ -53,7 +53,7 @@ public class DfsSolver implements Solver {
                 || row + neighRows[i] < 0
                 || col + neighCols[i] >= grid[0].length
                 || col + neighCols[i] < 0
-                || grid[row][col].getType().equals(Type.WALL)) {
+                || grid[row + neighRows[i]][col + neighCols[i]].getType().equals(Type.WALL)) {
                 continue;
             }
             neighs.add(grid[row + neighRows[i]][col + neighCols[i]]);

@@ -2,7 +2,7 @@ package edu.project2;
 
 import java.util.List;
 
-public class DfsRenderer implements Renderer {
+public class RendererImpl implements Renderer {
 
     private final static char WALL_SYMBOL = '█';
     //∎ █
