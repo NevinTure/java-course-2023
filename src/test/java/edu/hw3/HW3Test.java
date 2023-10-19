@@ -150,7 +150,7 @@ public class HW3Test {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {")", "((", "(()))", "("})
+    @ValueSource(strings = {")", "((", "(()))", "(", "[[{)))"})
     void testClusterizeFailed(String str) {
         //then
         assertThatIllegalStateException().isThrownBy(() -> clusterize(str));

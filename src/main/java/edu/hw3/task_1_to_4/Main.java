@@ -33,8 +33,8 @@ public class Main {
 
     @SuppressWarnings("MultipleStringLiterals")
     public static List<String> clusterize(String str) {
-        if (str == null) {
-            throw new IllegalArgumentException("Input must be not null!");
+        if (str == null || !str.matches("[()]+")) {
+            throw new IllegalStateException("Invalid input!");
         }
         List<String> ans = new ArrayList<>();
         StringBuilder temp = new StringBuilder();
