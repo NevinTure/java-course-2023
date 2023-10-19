@@ -254,8 +254,8 @@ public class HW3Test {
 
         //when
         List<T> result = new ArrayList<>();
-        while (backwardIterator.hasPrev()) {
-            result.add(backwardIterator.prev());
+        while (backwardIterator.hasNext()) {
+            result.add(backwardIterator.next());
         }
 
         //then

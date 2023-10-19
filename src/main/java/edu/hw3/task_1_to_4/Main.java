@@ -41,7 +41,7 @@ public class Main {
         int bracketCounter = 0;
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            bracketCounter += calculateBracket(c);
+            bracketCounter += c == ')' ? -1 : 1;
             temp.append(c);
             if (bracketCounter == 0) {
                 ans.add(temp.toString());
@@ -54,16 +54,6 @@ public class Main {
             throw new IllegalStateException("Invalid input!");
         }
         return ans;
-    }
-
-    private static int calculateBracket(char bracket) {
-        if (bracket == ')') {
-            return -1;
-        }
-        if (bracket == '(') {
-            return 1;
-        }
-        throw new IllegalArgumentException("Only brackets supported!");
     }
 
     public static <T> Map<T, Integer> freqDict(T[] a) {

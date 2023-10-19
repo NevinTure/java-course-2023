@@ -28,14 +28,15 @@ public class ContactBook {
             throw new IllegalArgumentException("Contact must not be empty!");
         }
         String[] fullName = contactStr.split("\\s+");
-        Contact contact = new Contact();
+        String name = null;
+        String surname = null;
         if (fullName.length > 0) {
-            contact.setName(fullName[0]);
+            name = fullName[0];
         }
         if (fullName.length > 1) {
-            contact.setSurname(fullName[1]);
+            surname = fullName[1];
         }
-        return contact;
+        return new Contact(name, surname);
     }
 
     private static Comparator<Contact> getParseSortOrder(String sortOrder) {

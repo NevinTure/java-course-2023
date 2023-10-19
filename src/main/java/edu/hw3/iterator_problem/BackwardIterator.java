@@ -1,9 +1,10 @@
 package edu.hw3.iterator_problem;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
-public class BackwardIterator<T> {
+public class BackwardIterator<T> implements Iterator<T> {
     private int currPos;
     private final List<T> list;
 
@@ -15,12 +16,14 @@ public class BackwardIterator<T> {
         currPos = collection.size() - 1;
     }
 
-    public boolean hasPrev() {
+    @Override
+    public boolean hasNext() {
         return currPos >= 0;
     }
 
-    public T prev() {
-        if (hasPrev()) {
+    @Override
+    public T next() {
+        if (hasNext()) {
             return list.get(currPos--);
         } else {
             return null;

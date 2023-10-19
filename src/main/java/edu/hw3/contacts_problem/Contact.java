@@ -3,53 +3,21 @@ package edu.hw3.contacts_problem;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 
-public class Contact implements Comparable<Contact> {
-    private String name;
-    private String surname;
-
-    //other fields
-
-    public Contact() {
-    }
-
-    public Contact(String name) {
-        this.name = name;
-    }
-
-    public Contact(String name, String surname) {
-        this.name = name;
-        this.surname = surname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+public record Contact(String name, String surname) implements Comparable<Contact> {
 
     @Override
     public int compareTo(@NotNull Contact o) {
         if (this.surname == null) {
-            if (o.getSurname() == null) {
-                return this.name.compareTo(o.getName());
+            if (o.surname() == null) {
+                return this.name.compareTo(o.name());
             } else {
-                return this.name.compareTo(o.getSurname());
+                return this.name.compareTo(o.surname());
             }
         } else {
-            if (o.getSurname() == null) {
-                return this.surname.compareTo(o.getName());
+            if (o.surname() == null) {
+                return this.surname.compareTo(o.name());
             } else {
-                return this.surname.compareTo(o.getSurname());
+                return this.surname.compareTo(o.surname());
             }
         }
     }
