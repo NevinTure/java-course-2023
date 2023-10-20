@@ -1,8 +1,10 @@
 package edu.project2;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class PrimGenerator implements Generator {
 
@@ -30,12 +32,9 @@ public class PrimGenerator implements Generator {
         Cell current = grid[1][1];
         current.setType(Type.PASSAGE);
         Coordinate coord = current.getCoord();
-        List<Cell> walls = getNeighWalls(coord, grid);
-        Renderer renderer = new RendererImpl();
+        Set<Cell> walls = getNeighWalls(coord, grid);
         while (!walls.isEmpty()) {
-            System.out.println(renderer.render(new Maze(grid, grid.length, grid[0].length)));
-            int choice = RANDOMIZER.nextInt(walls.size());
-            Cell neig = walls.get(choice);
+            Cell neig = getRandomCellFromSet(walls);
             walls.remove(neig);
             neig.setType(Type.PASSAGE);
             coord = neig.getCoord();
@@ -46,21 +45,31 @@ public class PrimGenerator implements Generator {
         }
     }
 
-    private List<Cell> getNeighWalls(Coordinate coord, Cell[][] grid) {
-        List<Cell> neighs = new ArrayList<>(neighRows.length);
+    private Set<Cell> getNeighWalls(Coordinate coord, Cell[][] grid) {
+        Set<Cell> neighs = new HashSet<>(neighRows.length);
         int row = coord.row();
         int col = coord.col();
         for (int i = 0; i < neighRows.length; i++) {
-            if (row + neighRows[i] >= grid.length - 1
-                || row + neighRows[i] <= 0
-                || col + neighCols[i] >= grid[0].length - 1
-                || col + neighCols[i] <= 0
-                || grid[row + neighRows[i]][col + neighCols[i]].getType().equals(Type.PASSAGE)) {
+            int rowCoord = row + neighRows[i];
+            int colCoord = col + neighCols[i];
+            if (rowCoord >= grid.length - 1
+                || rowCoord <= 0
+                || colCoord >= grid[0].length - 1
+                || colCoord <= 0
+                || grid[rowCoord][colCoord].getType().equals(Type.PASSAGE)) {
                 continue;
             }
-            neighs.add(grid[row + neighRows[i]][col + neighCols[i]]);
+            neighs.add(grid[rowCoord][colCoord]);
         }
         return neighs;
+    }
+
+    private Cell getRandomCellFromSet(Set<Cell> cells) {
+        return cells
+            .stream()
+            .skip(RANDOMIZER.nextInt(cells.size()))
+            .findFirst()
+            .orElse(null);
     }
 
     private Cell findPassageToConnectWith(Coordinate coord, Cell[][] grid) {
@@ -72,14 +81,16 @@ public class PrimGenerator implements Generator {
         Cell foundPassage = null;
         while (!directions.isEmpty()) {
             Coordinate direction = getRandomDirection(directions);
-            if (row + direction.row() >= grid.length
-                || row + direction.row() < 0
-                || col + direction.col() >= grid[0].length
-                || col + direction.col() < 0
-                || grid[row + direction.row()][col + direction.col()].getType().equals(Type.WALL)) {
+            int rowCoord = row + direction.row();
+            int colCoord = col + direction.col();
+            if (rowCoord >= grid.length
+                || rowCoord < 0
+                || colCoord >= grid[0].length
+                || colCoord < 0
+                || grid[rowCoord][colCoord].getType().equals(Type.WALL)) {
                 continue;
             }
-            foundPassage = grid[row + direction.row()][col + direction.col()];
+            foundPassage = grid[rowCoord][colCoord];
             break;
         }
         return foundPassage;

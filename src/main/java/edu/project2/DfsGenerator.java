@@ -65,13 +65,15 @@ public class DfsGenerator implements Generator {
         int row = coord.row();
         int col = coord.col();
         for (int i = 0; i < neighRows.length; i++) {
-            if (row + neighRows[i] >= grid.length
-                || row + neighRows[i] < 0
-                || col + neighCols[i] >= grid[0].length
-                || col + neighCols[i] < 0) {
+            int rowCoord = row + neighRows[i];
+            int colCoord = col + neighCols[i];
+            if (rowCoord >= grid.length
+                || rowCoord < 0
+                || colCoord >= grid[0].length
+                || colCoord < 0) {
                 continue;
             }
-            neighs.add(grid[row + neighRows[i]][col + neighCols[i]]);
+            neighs.add(grid[rowCoord][colCoord]);
         }
         return neighs;
     }

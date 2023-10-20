@@ -2,7 +2,7 @@ package edu.project2;
 
 import java.util.List;
 
-public class RendererImpl implements Renderer {
+public class ConsoleRenderer implements Renderer {
 
     private final static char WALL_SYMBOL = '█';
     //∎ █
