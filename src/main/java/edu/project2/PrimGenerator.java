@@ -13,6 +13,9 @@ public class PrimGenerator implements Generator {
     private final static int[] neighCols = {-2, 0, 2, 0};
     @Override
     public Maze generate(int height, int width) {
+        height += height % 2 == 0 ? 3 : 2;
+        //Или при четном размере выбрасывать ошибку
+        width += width % 2 == 0 ? 3 : 2;
         Cell[][] grid = generateStartGrid(height, width);
         generateMazeGrid(grid);
         return new Maze(grid, height, width);

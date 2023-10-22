@@ -11,13 +11,9 @@ public class DfsGenerator implements Generator {
 
     @Override
     public Maze generate(int height, int width) {
-        if (height % 2 == 0) {
-            height++;
-        }
+        height += height % 2 == 0 ? 3 : 2;
         //Или при четном размере выбрасывать ошибку
-        if (width % 2 == 0) {
-            width++;
-        }
+        width += width % 2 == 0 ? 3 : 2;
         Cell[][] grid = generateStartGrid(height, width);
         generateMazeGridRecursive(grid);
         return new Maze(grid, height, width);
