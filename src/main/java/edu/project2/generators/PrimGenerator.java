@@ -20,15 +20,11 @@ public class PrimGenerator implements Generator {
     @SuppressWarnings({"ParameterAssignment", "MagicNumber"})
     @Override
     public Maze generate(int height, int width) {
-        /*
-        При нечетном размере прибавляю 2, чтобы внутренняя сетка (то есть не считая внешний слой
-        стенок) была размером (height * width).
-        Алгоритм может работать с четными размерами, но тогда правую и нижнюю стенку необходимо
-        сделать шириной в 2 клетки. Но чтобы такого не было и для большей красоты, к четным я
-        прибавляю 3. Так же можно решить эту проблему выбросив ошибку при вводе четной длины.
-         */
-        height += height % 2 == 0 ? 3 : 2;
-        width += width % 2 == 0 ? 3 : 2;
+        //Прибавляю 2, чтобы внутренняя сетка (то есть не считая внешний слой стенок) была размером (height * width)
+        checkParam(height);
+        height += 2;
+        checkParam(width);
+        width += 2;
         Cell[][] grid = generateStartGrid(height, width);
         generateMazeGrid(grid);
         return new Maze(grid, height, width);
@@ -134,5 +130,11 @@ public class PrimGenerator implements Generator {
         }
         cell.setType(Type.PASSAGE);
         return cell;
+    }
+
+    private void checkParam(int param) {
+        if (param < 0 || param % 2 == 0) {
+            throw new IllegalArgumentException("Illegal parameter (even or sub zero)!");
+        }
     }
 }

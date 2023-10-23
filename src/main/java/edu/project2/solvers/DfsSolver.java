@@ -17,34 +17,32 @@ public class DfsSolver implements Solver {
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
         List<Coordinate> answer = new ArrayList<>();
         Cell[][] grid = maze.getGrid();
-        Cell startCell = grid[start.row()][start.col()];
-        Cell endCell = grid[end.row()][end.col()];
+        checkParam(start, grid);
+        checkParam(end, grid);
         boolean[][] visited = new boolean[grid.length][grid[0].length];
-        depthFirstSearch(grid, startCell, endCell, visited, answer);
+        depthFirstSearch(grid, start, end, visited, answer);
         return answer;
     }
 
     private boolean depthFirstSearch(
         Cell[][] grid,
-        Cell current,
-        Cell end,
+        Coordinate current,
+        Coordinate end,
         boolean[][] visited,
         List<Coordinate> answer) {
         if (current.equals(end)) {
-            answer.add(current.getCoord());
+            answer.add(current);
             return true;
         }
-        Coordinate coord = current.getCoord();
-        visited[coord.row()][coord.col()] = true;
-        List<Cell> neighbours = getCellNeighbors(coord, grid);
+        visited[current.row()][current.col()] = true;
+        List<Coordinate> neighbours = getCellNeighbors(current, grid);
         while (!neighbours.isEmpty()) {
             int choice = RANDOMIZER.nextInt(neighbours.size());
-            Cell neig = neighbours.get(choice);
-            Coordinate neighCoord = neig.getCoord();
-            if (!visited[neighCoord.row()][neighCoord.col()]) {
+            Coordinate neig = neighbours.get(choice);
+            if (!visited[neig.row()][neig.col()]) {
                 boolean isEnd = depthFirstSearch(grid, neig, end, visited, answer);
                 if (isEnd) {
-                    answer.add(coord);
+                    answer.add(current);
                     return true;
                 }
             }
@@ -53,8 +51,8 @@ public class DfsSolver implements Solver {
         return false;
     }
 
-    private List<Cell> getCellNeighbors(Coordinate coord, Cell[][] grid) {
-        List<Cell> neighs = new ArrayList<>(NEIGH_ROWS.length);
+    private List<Coordinate> getCellNeighbors(Coordinate coord, Cell[][] grid) {
+        List<Coordinate> neighs = new ArrayList<>(NEIGH_ROWS.length);
         int row = coord.row();
         int col = coord.col();
         for (int i = 0; i < NEIGH_ROWS.length; i++) {
@@ -67,8 +65,18 @@ public class DfsSolver implements Solver {
                 || grid[rowCoord][colCoord].getType().equals(Type.WALL)) {
                 continue;
             }
-            neighs.add(grid[rowCoord][colCoord]);
+            neighs.add(grid[rowCoord][colCoord].getCoord());
         }
         return neighs;
+    }
+
+    private void checkParam(Coordinate coord, Cell[][] grid) {
+        if (coord.row() < 0
+            || coord.row() >= grid.length
+            || coord.col() < 0
+            || coord.col() >= grid[0].length
+            || grid[coord.row()][coord.col()].getType().equals(Type.WALL)) {
+            throw new IllegalArgumentException("Illegal parameter (out of bound or wall)");
+        }
     }
 }

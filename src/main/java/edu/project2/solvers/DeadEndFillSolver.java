@@ -17,6 +17,8 @@ public class DeadEndFillSolver implements Solver {
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
         Cell[][] grid = maze.getGrid();
+        checkParam(start, grid);
+        checkParam(end, grid);
         int[][] fillerGrid = parseGrid(grid);
         protectCells(fillerGrid, start, end);
         List<Coordinate> deadEns = findDeadEnds(fillerGrid);
@@ -115,5 +117,15 @@ public class DeadEndFillSolver implements Solver {
             }
         }
         return coord;
+    }
+
+    private void checkParam(Coordinate coord, Cell[][] grid) {
+        if (coord.row() < 0
+            || coord.row() >= grid.length
+            || coord.col() < 0
+            || coord.col() >= grid[0].length
+            || grid[coord.row()][coord.col()].getType().equals(Type.WALL)) {
+            throw new IllegalArgumentException("Illegal parameter (out of bound or wall)");
+        }
     }
 }
