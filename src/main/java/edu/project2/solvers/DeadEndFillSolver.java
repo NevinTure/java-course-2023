@@ -1,23 +1,24 @@
-package edu.project2;
+package edu.project2.solvers;
 
+import edu.project2.Cell;
+import edu.project2.Coordinate;
+import edu.project2.Maze;
+import edu.project2.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class DeadEndFillSolver implements Solver {
-    private final static Random RANDOMIZER = new Random();
-    private final static int[] neighRows = {0, -1, 0, 1};
-    private final static int[] neighCols = {-1, 0, 1, 0};
-    private final int FILLER = 1;
-    private final int PROTECTED_CELL = 2;
-    private final int DEAD_END_WALLS_NUM = 3;
+    private final static int[] NEIGH_ROWS = {0, -1, 0, 1};
+    private final static int[] NEIGH_COLS = {-1, 0, 1, 0};
+    private final static int FILLER = 1;
+    private final static int PROTECTED_CELL = 2;
+    private final static int DEAD_END_WALLS_NUM = 3;
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
         Cell[][] grid = maze.getGrid();
-        int[][] fillerGrid = new int[maze.getHeight()][maze.getWidth()];
+        int[][] fillerGrid = parseGrid(grid);
         protectCells(fillerGrid, start, end);
-        parseGrid(fillerGrid, grid);
         List<Coordinate> deadEns = findDeadEnds(fillerGrid);
         fillDeadEnds(deadEns, fillerGrid);
         return findPath(start, end, fillerGrid);
@@ -29,7 +30,8 @@ public class DeadEndFillSolver implements Solver {
         }
     }
 
-    private void parseGrid(int[][] fillerGrid, Cell[][] grid) {
+    private int[][] parseGrid(Cell[][] grid) {
+        int[][] fillerGrid = new int[grid.length][grid[0].length];
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 if (grid[i][j].getType().equals(Type.WALL)) {
@@ -37,6 +39,7 @@ public class DeadEndFillSolver implements Solver {
                 }
             }
         }
+        return fillerGrid;
     }
 
     private List<Coordinate> findDeadEnds(int[][] fillerGrid) {
@@ -68,9 +71,9 @@ public class DeadEndFillSolver implements Solver {
         int counter = 0;
         int row = coord.row();
         int col = coord.col();
-        for (int i = 0; i < neighRows.length; i++) {
-            int rowCoord = row + neighRows[i];
-            int colCoord = col + neighCols[i];
+        for (int i = 0; i < NEIGH_ROWS.length; i++) {
+            int rowCoord = row + NEIGH_ROWS[i];
+            int colCoord = col + NEIGH_COLS[i];
             if (fillerGrid[rowCoord][colCoord] != FILLER) {
                 counter++;
             }
@@ -80,8 +83,8 @@ public class DeadEndFillSolver implements Solver {
 
     private boolean isDeadEnd(int x, int y, int[][] fillerGrid) {
         int wallCounter = 0;
-        for (int i = 0; i < neighRows.length; i++) {
-            if (fillerGrid[x + neighRows[i]][y + neighCols[i]] == FILLER) {
+        for (int i = 0; i < NEIGH_ROWS.length; i++) {
+            if (fillerGrid[x + NEIGH_ROWS[i]][y + NEIGH_COLS[i]] == FILLER) {
                 wallCounter++;
             }
         }
@@ -104,9 +107,9 @@ public class DeadEndFillSolver implements Solver {
         int row = prev.row();
         int col = prev.col();
         Coordinate coord = null;
-        for (int i = 0; i < neighRows.length; i++) {
-            int rowCoord = row + neighRows[i];
-            int colCoord = col + neighCols[i];
+        for (int i = 0; i < NEIGH_ROWS.length; i++) {
+            int rowCoord = row + NEIGH_ROWS[i];
+            int colCoord = col + NEIGH_COLS[i];
             if (fillerGrid[rowCoord][colCoord] != FILLER) {
                 coord = new Coordinate(rowCoord, colCoord);
             }

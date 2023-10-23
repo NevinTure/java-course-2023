@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Cell {
     private Type type;
-    private Coordinate coord;
+    private final Coordinate coord;
 
     public Cell(Type type, Coordinate coord) {
         this.type = type;
@@ -24,8 +24,12 @@ public class Cell {
     }
 
     @Override public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Cell cell = (Cell) o;
         return type == cell.type && Objects.equals(coord, cell.coord);
     }

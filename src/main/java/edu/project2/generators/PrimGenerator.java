@@ -1,5 +1,10 @@
-package edu.project2;
+package edu.project2.generators;
 
+import edu.project2.Cell;
+import edu.project2.Coordinate;
+import edu.project2.Direction;
+import edu.project2.Maze;
+import edu.project2.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,12 +14,20 @@ import java.util.Set;
 public class PrimGenerator implements Generator {
 
     private static final Random RANDOMIZER = new Random();
-    private final static int[] neighRows = {0, -2, 0, 2};
-    private final static int[] neighCols = {-2, 0, 2, 0};
+    private final static int[] NEIGH_ROWS = {0, -2, 0, 2};
+    private final static int[] NEIGH_COLS = {-2, 0, 2, 0};
+
+    @SuppressWarnings({"ParameterAssignment", "MagicNumber"})
     @Override
     public Maze generate(int height, int width) {
+        /*
+        При нечетном размере прибавляю 2, чтобы внутренняя сетка (то есть не считая внешний слой
+        стенок) была размером (height * width).
+        Алгоритм может работать с четными размерами, но тогда правую и нижнюю стенку необходимо
+        сделать шириной в 2 клетки. Но чтобы такого не было и для большей красоты, к четным я
+        прибавляю 3. Так же можно решить эту проблему выбросив ошибку при вводе четной длины.
+         */
         height += height % 2 == 0 ? 3 : 2;
-        //Или при четном размере выбрасывать ошибку
         width += width % 2 == 0 ? 3 : 2;
         Cell[][] grid = generateStartGrid(height, width);
         generateMazeGrid(grid);
@@ -42,19 +55,19 @@ public class PrimGenerator implements Generator {
             neig.setType(Type.PASSAGE);
             coord = neig.getCoord();
             Cell pass = findPassageToConnectWith(coord, grid);
-            Cell wall = removeWall(grid, coord, pass.getCoord());
+            Cell wall = removeWall(coord, pass.getCoord(), grid);
             wall.setType(Type.PASSAGE);
             walls.addAll(getNeighWalls(coord, grid));
         }
     }
 
     private Set<Cell> getNeighWalls(Coordinate coord, Cell[][] grid) {
-        Set<Cell> neighs = new HashSet<>(neighRows.length);
+        Set<Cell> neighs = new HashSet<>(NEIGH_ROWS.length);
         int row = coord.row();
         int col = coord.col();
-        for (int i = 0; i < neighRows.length; i++) {
-            int rowCoord = row + neighRows[i];
-            int colCoord = col + neighCols[i];
+        for (int i = 0; i < NEIGH_ROWS.length; i++) {
+            int rowCoord = row + NEIGH_ROWS[i];
+            int colCoord = col + NEIGH_COLS[i];
             if (rowCoord >= grid.length - 1
                 || rowCoord <= 0
                 || colCoord >= grid[0].length - 1
@@ -99,6 +112,7 @@ public class PrimGenerator implements Generator {
         return foundPassage;
     }
 
+    @SuppressWarnings("MagicNumber")
     private Coordinate getRandomDirection(List<Direction> directions) {
         int choice = RANDOMIZER.nextInt(directions.size());
         Direction direction = directions.get(choice);
@@ -111,7 +125,7 @@ public class PrimGenerator implements Generator {
         };
     }
 
-    private Cell removeWall(Cell[][] grid, Coordinate currentCoord, Coordinate neighCoord) {
+    private Cell removeWall(Coordinate currentCoord, Coordinate neighCoord, Cell[][] grid) {
         Cell cell;
         if (currentCoord.row() == neighCoord.row()) {
             cell = grid[currentCoord.row()][(currentCoord.col() + neighCoord.col()) / 2];

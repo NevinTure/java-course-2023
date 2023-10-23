@@ -1,13 +1,17 @@
-package edu.project2;
+package edu.project2.solvers;
 
+import edu.project2.Cell;
+import edu.project2.Coordinate;
+import edu.project2.Maze;
+import edu.project2.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class DfsSolver implements Solver {
     private final static Random RANDOMIZER = new Random();
-    private final static int[] neighRows = {0, -1, 0, 1};
-    private final static int[] neighCols = {-1, 0, 1, 0};
+    private final static int[] NEIGH_ROWS = {0, -1, 0, 1};
+    private final static int[] NEIGH_COLS = {-1, 0, 1, 0};
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
@@ -20,7 +24,12 @@ public class DfsSolver implements Solver {
         return answer;
     }
 
-    private boolean depthFirstSearch(Cell[][] grid, Cell current, Cell end, boolean[][] visited, List<Coordinate> answer) {
+    private boolean depthFirstSearch(
+        Cell[][] grid,
+        Cell current,
+        Cell end,
+        boolean[][] visited,
+        List<Coordinate> answer) {
         if (current.equals(end)) {
             answer.add(current.getCoord());
             return true;
@@ -45,12 +54,12 @@ public class DfsSolver implements Solver {
     }
 
     private List<Cell> getCellNeighbors(Coordinate coord, Cell[][] grid) {
-        List<Cell> neighs = new ArrayList<>(neighRows.length);
+        List<Cell> neighs = new ArrayList<>(NEIGH_ROWS.length);
         int row = coord.row();
         int col = coord.col();
-        for (int i = 0; i < neighRows.length; i++) {
-            int rowCoord = row + neighRows[i];
-            int colCoord = col + neighCols[i];
+        for (int i = 0; i < NEIGH_ROWS.length; i++) {
+            int rowCoord = row + NEIGH_ROWS[i];
+            int colCoord = col + NEIGH_COLS[i];
             if (rowCoord >= grid.length
                 || rowCoord < 0
                 || colCoord >= grid[0].length

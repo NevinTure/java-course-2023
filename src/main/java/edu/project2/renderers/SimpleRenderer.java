@@ -1,11 +1,14 @@
-package edu.project2;
+package edu.project2.renderers;
 
+import edu.project2.Cell;
+import edu.project2.Coordinate;
+import edu.project2.Maze;
+import edu.project2.Type;
 import java.util.List;
 
-public class RendererImpl implements Renderer {
+public class SimpleRenderer implements Renderer {
 
     private final static char WALL_SYMBOL = '█';
-    //∎ █
     private final static char PASSAGE_SYMBOL = ' ';
     private final static char PATH_SYMBOL = '◊';
 
