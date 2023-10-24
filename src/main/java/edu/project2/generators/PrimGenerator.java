@@ -20,11 +20,8 @@ public class PrimGenerator implements Generator {
     @SuppressWarnings({"ParameterAssignment", "MagicNumber"})
     @Override
     public Maze generate(int height, int width) {
-        //Прибавляю 2, чтобы внутренняя сетка (то есть не считая внешний слой стенок) была размером (height * width)
         checkParam(height);
-        height += 2;
         checkParam(width);
-        width += 2;
         Cell[][] grid = generateStartGrid(height, width);
         generateMazeGrid(grid);
         return new Maze(grid, height, width);

@@ -116,13 +116,14 @@ public class DeadEndFillSolver implements Solver {
                 coord = new Coordinate(rowCoord, colCoord);
             }
         }
+        if (coord == null) {
+            throw new IllegalStateException("Maze cannot be solved!");
+        }
         return coord;
     }
 
     private void checkParam(Coordinate coord, Cell[][] grid) {
-        if (coord.row() < 0
-            || coord.row() >= grid.length
-            || coord.col() < 0
+        if (coord.row() >= grid.length
             || coord.col() >= grid[0].length
             || grid[coord.row()][coord.col()].getType().equals(Type.WALL)) {
             throw new IllegalArgumentException("Illegal parameter (out of bound or wall)");

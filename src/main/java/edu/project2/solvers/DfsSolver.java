@@ -21,6 +21,9 @@ public class DfsSolver implements Solver {
         checkParam(end, grid);
         boolean[][] visited = new boolean[grid.length][grid[0].length];
         depthFirstSearch(grid, start, end, visited, answer);
+        if (!answer.contains(end)) {
+            throw new IllegalStateException("Maze cannot be solved!");
+        }
         return answer;
     }
 
@@ -71,9 +74,7 @@ public class DfsSolver implements Solver {
     }
 
     private void checkParam(Coordinate coord, Cell[][] grid) {
-        if (coord.row() < 0
-            || coord.row() >= grid.length
-            || coord.col() < 0
+        if (coord.row() >= grid.length
             || coord.col() >= grid[0].length
             || grid[coord.row()][coord.col()].getType().equals(Type.WALL)) {
             throw new IllegalArgumentException("Illegal parameter (out of bound or wall)");
