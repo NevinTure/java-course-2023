@@ -35,6 +35,15 @@ public class MazeTest {
         };
     }
 
+    private static Arguments[] generatorsAndSolvers() {
+        return new Arguments[] {
+            Arguments.of(new DfsGenerator(), new DfsSolver()),
+            Arguments.of( new PrimGenerator(), new DeadEndFillSolver()),
+            Arguments.of(new DfsGenerator(), new DeadEndFillSolver()),
+            Arguments.of( new PrimGenerator(), new DfsSolver())
+        };
+    }
+
 
     @Test
     void testRendererWithPredefinedMaze() {
@@ -86,6 +95,23 @@ public class MazeTest {
             █████
             """;
         assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @ParameterizedTest
+    @MethodSource("generatorsAndSolvers")
+    void testSolvers(Generator generator, Solver solver) {
+        //given
+        int height = 15;
+        int width = 15;
+        Coordinate start = new Coordinate(1, 1);
+        Coordinate end = new Coordinate(13, 13);
+
+        //when
+        Maze maze = generator.generate(height, width);
+        List<Coordinate> result = solver.solve(maze, start, end);
+
+        //then
+        assertThat(result).contains(start, end);
     }
 
     @ParameterizedTest
