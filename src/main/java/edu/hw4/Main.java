@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BinaryOperator;
@@ -11,6 +12,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Main {
+
+    private static final int ONE_METER = 100;
 
     private Main() {
     }
@@ -40,17 +43,17 @@ public class Main {
         return animals
             .stream()
             .max(Comparator.comparing(animal -> animal.name().length()))
-            .get();
+            .orElse(null);
     }
 
     public static Animal.Sex getMostSex(List<Animal> animals) {
-        return animals
-            .stream()
-            .collect(Collectors.groupingBy(Animal::sex, Collectors.counting()))
-            .entrySet()
-            .stream()
-            .max(Map.Entry.comparingByValue())
-            .get()
+        return Objects.requireNonNull(animals
+                .stream()
+                .collect(Collectors.groupingBy(Animal::sex, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .orElse(null))
             .getKey();
     }
 
@@ -60,17 +63,17 @@ public class Main {
             .collect(Collectors
                 .toMap(Animal::type,
                     Function.identity(),
-                    BinaryOperator.maxBy(Comparator.comparing(Animal::weight)
-            )));
+                    BinaryOperator.maxBy(Comparator.comparing(Animal::weight))
+                ));
     }
 
     public static Animal getKthByAgeDesc(int k, List<Animal> animals) {
         return animals
             .stream()
-            .sorted(Comparator.comparing(Animal::age))
+            .sorted(Comparator.comparing(Animal::age).reversed())
             .skip(k - 1)
             .findFirst()
-            .get();
+            .orElse(null);
     }
 
     public static Optional<Animal> getHeaviestLowerThatKCm(int k, List<Animal> animals) {
@@ -93,10 +96,10 @@ public class Main {
             .toList();
     }
 
-    public static List<Animal> getWhichBytesAndHeightLowerThan1M(List<Animal> animals) {
+    public static List<Animal> getWhichBytesAndHeightGreaterThan1M(List<Animal> animals) {
         return animals
             .stream()
-            .filter(v -> v.bites() && v.height() > 100)
+            .filter(v -> (v.bites() == null || v.bites()) && v.height() > ONE_METER)
             .toList();
     }
 
@@ -117,7 +120,7 @@ public class Main {
     public static Boolean checkIsDogWithHeightGreaterThanKCmPresent(int k, List<Animal> animals) {
         return animals
             .stream()
-            .anyMatch(v -> v.height() > k && v.type().equals(Animal.Type.DOG));
+            .anyMatch(v -> v.height() > k && Objects.equals(v.type(), Animal.Type.DOG));
     }
 
     public static Integer getWeightSumOfAnimalWithAgeFromKToL(int k, int l, List<Animal> animals) {
@@ -143,7 +146,7 @@ public class Main {
             .stream()
             .collect(Collectors
                 .groupingBy(Animal::type,
-                    Collectors.reducing(0, v1 -> v1.bites() ? 1 : 0, Integer::sum)
+                    Collectors.reducing(0, v1 -> (v1.bites() == null || v1.bites()) ? 1 : 0, Integer::sum)
                 )
             );
         if (spidersAndDogs.get(Animal.Type.SPIDER) == null
@@ -158,13 +161,13 @@ public class Main {
             .stream()
             .flatMap(Collection::stream)
             .reduce((v1, v2) ->
-                !v1.type().equals(Animal.Type.FISH)
+                !Objects.equals(v1.type(), Animal.Type.FISH)
                     ? v2
-                    : !v2.type().equals(Animal.Type.FISH)
+                    : !Objects.equals(v2.type(), Animal.Type.FISH)
                     ? v1
                     : v1.weight() > v2.weight()
                     ? v1 : v2)
-            .get();
+            .orElse(null);
     }
 
     public static Map<String, Set<ValidationError>> getErrorsByNames(List<Animal> animals) {
@@ -180,7 +183,7 @@ public class Main {
                 ));
     }
 
-    public static Map<String, String> getPrintableMap(Map<String, Set<ValidationError>> errors) {
+    public static Map<String, String> getPrintableErrorsByNames(Map<String, Set<ValidationError>> errors) {
         return errors
             .entrySet()
             .stream()
@@ -190,7 +193,7 @@ public class Main {
                     .getValue()
                     .stream()
                     .map(ValidationError::toString)
-                    .collect(Collectors.joining(" ")),
+                    .collect(Collectors.joining(", ")),
                 (v1, v2) -> v1
             ));
     }
