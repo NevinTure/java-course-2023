@@ -24,6 +24,7 @@ import static edu.hw5.task7_8.Main.NOT_CONSECUTIVE_ONES;
 import static edu.hw5.task7_8.Main.ODD_SIZE;
 import static edu.hw5.task7_8.Main.SIZE_FROM_1_TO_3_SYMBOLS;
 import static edu.hw5.task7_8.Main.STARTS_WITH_0_ODD_SIZE_OR_STARTS_WITH_1_EVEN_SIZE;
+import static edu.hw5.task7_8.Main.ZERO_MULTIPLE_3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HW5Test {
@@ -313,6 +314,21 @@ public class HW5Test {
         );
         falseTests.forEach(v ->
             assertThat(NOT_CONSECUTIVE_ONES.matcher(v).find())
+                .isFalse()
+        );
+    }
+
+    @Test
+    void testZERO_MULTIPLE_3Regex() {
+        List<String> trueTests = List.of("1010101", "00010001", "01100", "000");
+        List<String> falseTests = List.of("01011", "110", "01101100");
+
+        trueTests.forEach(v ->
+            assertThat(ZERO_MULTIPLE_3.matcher(v).find())
+                .isTrue()
+        );
+        falseTests.forEach(v ->
+            assertThat(ZERO_MULTIPLE_3.matcher(v).find())
                 .isFalse()
         );
     }

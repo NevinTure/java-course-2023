@@ -21,7 +21,7 @@ public class Main {
         Pattern.compile("^((0([01]{2})*)|(1[10]([01]{2})*))$");
 
     //количество 0 кратно 3
-    public static final Pattern ZERO_MULTIPLE_3 = Pattern.compile("NOT IMPLEMENTED");
+    public static final Pattern ZERO_MULTIPLE_3 = Pattern.compile("^((1*01*01*01*)*)$");
 
     //любая строка, кроме 11 или 111
     public static final Pattern ANY_STRING_EXCEPT_2_OR_3_ONES = Pattern.compile("^(?!111?$)");
