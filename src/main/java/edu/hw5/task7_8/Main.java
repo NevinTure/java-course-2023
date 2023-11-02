@@ -17,26 +17,24 @@ public class Main {
     public static final Pattern ODD_SIZE = Pattern.compile("^[01]([01]{2})*$");
 
     //начинается с 0 и имеет нечетную длину, или начинается с 1 и имеет четную длину
-    public static final Pattern STARTS_WITH_0_ODD_SIZE_OR_STARTS_WITH_1_EVEN_SIZE = Pattern.compile("^((0([01]{2})*)|(1[10]([01]{2})*))$");
-
+    public static final Pattern STARTS_WITH_0_ODD_SIZE_OR_STARTS_WITH_1_EVEN_SIZE =
+        Pattern.compile("^((0([01]{2})*)|(1[10]([01]{2})*))$");
 
     //количество 0 кратно 3
-    private static final String threeZeros = "(000)";
-    private static final String anyTrioWith1Zero = "((011)|(101)|(110))";
-    public static final Pattern ZERO_MULTIPLE_3 = Pattern.compile("");
+    public static final Pattern ZERO_MULTIPLE_3 = Pattern.compile("NOT IMPLEMENTED");
 
     //любая строка, кроме 11 или 111
-    public static final Pattern ANY_STRING_EXCEPT_2_OR_3_ONES = Pattern.compile("^(?!(111?))$");
+    public static final Pattern ANY_STRING_EXCEPT_2_OR_3_ONES = Pattern.compile("^(?!111?$)");
 
     //каждый нечетный символ равен 1
-    public static final Pattern EVERY_ODD_SYMBOL_IS_1 = Pattern.compile("^1([01]1)*$");
+    public static final Pattern EVERY_ODD_SYMBOL_IS_1 = Pattern.compile("^(((1[01])*)|(1([01]1)*))$");
 
     //содержит не менее двух 0 и не более одной 1
-    public static final Pattern AT_LEAST_2_ZEROS_AND_LESS_THAT_2_ONES = Pattern.compile("^(0+10+)|(10{2,})|(0{2,}1)|(0{2,})$");
+    public static final Pattern AT_LEAST_2_ZEROS_AND_LESS_THAT_2_ONES =
+        Pattern.compile("^((0+10+)|(10{2,})|(0{2,}1)|(0{2,}))$");
 
     //нет последовательных 1
-    public static final Pattern NOT_CONSECUTIVE_ONES = Pattern.compile("^[10]*(?!(1{2,}))[10]*$");
-
+    public static final Pattern NOT_CONSECUTIVE_ONES = Pattern.compile("^(?![01]*1{2,})[01]*$");
 
     private Main() {
     }

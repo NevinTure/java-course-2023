@@ -16,8 +16,11 @@ import static edu.hw5.Task5.checkAutoNumber;
 import static edu.hw5.Task6.subString;
 import static edu.hw5.task3.Main.parseDate;
 import static edu.hw5.task7_8.Main.ANY_STRING_EXCEPT_2_OR_3_ONES;
+import static edu.hw5.task7_8.Main.AT_LEAST_2_ZEROS_AND_LESS_THAT_2_ONES;
 import static edu.hw5.task7_8.Main.AT_LEAST_3_SYMBOLS_AND_THIRD_IS_0;
 import static edu.hw5.task7_8.Main.ENDS_AND_STARTS_THE_SAME;
+import static edu.hw5.task7_8.Main.EVERY_ODD_SYMBOL_IS_1;
+import static edu.hw5.task7_8.Main.NOT_CONSECUTIVE_ONES;
 import static edu.hw5.task7_8.Main.ODD_SIZE;
 import static edu.hw5.task7_8.Main.SIZE_FROM_1_TO_3_SYMBOLS;
 import static edu.hw5.task7_8.Main.STARTS_WITH_0_ODD_SIZE_OR_STARTS_WITH_1_EVEN_SIZE;
@@ -44,13 +47,20 @@ public class HW5Test {
         return new Arguments[] {
             Arguments.of(
                 1925,
-                List.of(LocalDate.of(1925, 2, 13), LocalDate.of(1925, 3, 13), LocalDate.of(1925, 11, 13))
+                List.of(
+                    LocalDate.of(1925, 2, 13),
+                    LocalDate.of(1925, 3, 13),
+                    LocalDate.of(1925, 11, 13))
             ),
             Arguments.of(
                 1985,
-                List.of(LocalDate.of(1985, 9, 13), LocalDate.of(1985, 12, 13))
+                List.of(
+                    LocalDate.of(1985, 9, 13),
+                    LocalDate.of(1985, 12, 13))
             ),
-            Arguments.of(2010, List.of(LocalDate.of(2010, 8, 13)))
+            Arguments.of(
+                2010,
+                List.of(LocalDate.of(2010, 8, 13)))
         };
     }
 
@@ -258,6 +268,51 @@ public class HW5Test {
         );
         falseTests.forEach(v ->
             assertThat(ANY_STRING_EXCEPT_2_OR_3_ONES.matcher(v).find())
+                .isFalse()
+        );
+    }
+
+    @Test
+    void testEVERY_ODD_SYMBOL_IS_1Regex() {
+        List<String> trueTests = List.of("101", "111011", "1", "10");
+        List<String> falseTests = List.of("110", "011", "000");
+
+        trueTests.forEach(v ->
+            assertThat(EVERY_ODD_SYMBOL_IS_1.matcher(v).find())
+                .isTrue()
+        );
+        falseTests.forEach(v ->
+            assertThat(EVERY_ODD_SYMBOL_IS_1.matcher(v).find())
+                .isFalse()
+        );
+    }
+
+    @Test
+    void testAT_LEAST_2_ZEROS_AND_LESS_THAT_2_ONESRegex() {
+        List<String> trueTests = List.of("000", "000100000", "100", "00001");
+        List<String> falseTests = List.of("0011", "11000", "011");
+
+        trueTests.forEach(v ->
+            assertThat(AT_LEAST_2_ZEROS_AND_LESS_THAT_2_ONES.matcher(v).find())
+                .isTrue()
+        );
+        falseTests.forEach(v ->
+            assertThat(AT_LEAST_2_ZEROS_AND_LESS_THAT_2_ONES.matcher(v).find())
+                .isFalse()
+        );
+    }
+
+    @Test
+    void testNOT_CONSECUTIVE_ONESRegex() {
+        List<String> trueTests = List.of("10101010", "00010001", "0", "1");
+        List<String> falseTests = List.of("0011", "11000", "0110110");
+
+        trueTests.forEach(v ->
+            assertThat(NOT_CONSECUTIVE_ONES.matcher(v).find())
+                .isTrue()
+        );
+        falseTests.forEach(v ->
+            assertThat(NOT_CONSECUTIVE_ONES.matcher(v).find())
                 .isFalse()
         );
     }

@@ -5,6 +5,9 @@ import java.util.Optional;
 
 public class Main {
 
+    private Main() {
+    }
+
     public static Optional<LocalDate> parseDate(String string) {
         DateHandler dashes = new DashesDateHandler();
         DateHandler defined = new DefinedDaysAgoDateHandler();

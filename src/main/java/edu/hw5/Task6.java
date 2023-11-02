@@ -10,4 +10,7 @@ public class Task6 {
         Matcher matcher = pattern.matcher(t);
         return matcher.find();
     }
+
+    private Task6() {
+    }
 }

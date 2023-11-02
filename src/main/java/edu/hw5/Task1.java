@@ -3,12 +3,14 @@ package edu.hw5;
 import edu.hw5.util.TimeSpend;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class Task1 {
 
+    private static final int SECONDS_IN_MINUTE = 60;
+
     private Task1() {
     }
+
 
     public static TimeSpend averageTimeSpend(String[] durationStrs) {
         long totalMinutes = 0;
@@ -22,7 +24,7 @@ public class Task1 {
             totalMinutes += Duration.between(formattedTimeFrom, formattedTimeTo).toMinutes();
         }
         int averageTotalMinutes = (int) (totalMinutes / durationStrs.length);
-        return new TimeSpend(averageTotalMinutes / 60, averageTotalMinutes % 60);
+        return new TimeSpend(averageTotalMinutes / SECONDS_IN_MINUTE, averageTotalMinutes % SECONDS_IN_MINUTE);
     }
 
     public static LocalDateTime parseStrToDateTime(String str) {

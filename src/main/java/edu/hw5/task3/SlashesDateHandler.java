@@ -8,6 +8,7 @@ public class SlashesDateHandler extends DateHandler {
 
     private static final Pattern DATE_PATTERN = Pattern.compile("^([1-9]|[12]\\d|3[01])/([1-9]|1[0-2])/(\\d{3,4})$");
 
+    @SuppressWarnings("MagicNumber")
     @Override
     public LocalDate handleRequest(String request) {
         Matcher matcher = DATE_PATTERN.matcher(request);
