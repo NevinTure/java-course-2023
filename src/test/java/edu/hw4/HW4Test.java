@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import static edu.hw4.Main.checkIsDogWithHeightGreaterThanKCmPresent;
-import static edu.hw4.Main.checkSpidersBytesMoreThanDogs;
+import static edu.hw4.Main.checkSpidersBitesMoreThanDogs;
 import static edu.hw4.Main.countPaws;
 import static edu.hw4.Main.countWeightGreaterThanHeight;
 import static edu.hw4.Main.getAgeDifferFromPaws;
@@ -294,9 +294,9 @@ public class HW4Test {
     }
 
     @Test
-    void testCheckSpidersBytesMoreThanDogs() {
+    void testCheckSpidersBitesMoreThanDogs() {
         //when
-        boolean checker = checkSpidersBytesMoreThanDogs(basicAnimalList);
+        boolean checker = checkSpidersBitesMoreThanDogs(basicAnimalList);
 
         //then
         assertThat(checker).isTrue();

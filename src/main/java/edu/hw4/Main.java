@@ -141,19 +141,14 @@ public class Main {
             .toList();
     }
 
-    public static Boolean checkSpidersBytesMoreThanDogs(List<Animal> animals) {
-        Map<Animal.Type, Integer> spidersAndDogs = animals
+    public static Boolean checkSpidersBitesMoreThanDogs(List<Animal> animals) {
+        return animals
             .stream()
-            .collect(Collectors
-                .groupingBy(Animal::type,
-                    Collectors.reducing(0, v1 -> (v1.bites() == null || v1.bites()) ? 1 : 0, Integer::sum)
-                )
-            );
-        if (spidersAndDogs.get(Animal.Type.SPIDER) == null
-            || spidersAndDogs.get(Animal.Type.DOG) == null) {
-            return false;
-        }
-        return spidersAndDogs.get(Animal.Type.SPIDER) > spidersAndDogs.get(Animal.Type.DOG);
+            .filter(v ->
+                (v.type().equals(Animal.Type.DOG)
+                    || v.type().equals(Animal.Type.SPIDER))
+                    && (v.bites() == null || v.bites()))
+            .reduce(0, (v1, v2) -> v1 + (v2.type().equals(Animal.Type.SPIDER) ? 1 : -1), Integer::sum) > 0;
     }
 
     public static Animal getHeaviestFish(List<List<Animal>> listOfAnimals) {
