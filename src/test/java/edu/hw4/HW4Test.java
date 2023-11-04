@@ -20,7 +20,7 @@ import static edu.hw4.Main.getKthByAgeDesc;
 import static edu.hw4.Main.getMostSex;
 import static edu.hw4.Main.getPrintableErrorsByNames;
 import static edu.hw4.Main.getThickestForEachType;
-import static edu.hw4.Main.getWeightSumOfAnimalWithAgeFromKToL;
+import static edu.hw4.Main.getWeightSumOfAnimalsWithAgeFromKToL;
 import static edu.hw4.Main.getWhichBytesAndHeightGreaterThan1M;
 import static edu.hw4.Main.getWithLongestName;
 import static edu.hw4.Main.getWithNameContainsMoreThan2Words;
@@ -264,11 +264,15 @@ public class HW4Test {
         int l = 20;
 
         //when
-        int sum = getWeightSumOfAnimalWithAgeFromKToL(k, l, basicAnimalList);
+        Map<Animal.Type, Integer> sums = getWeightSumOfAnimalsWithAgeFromKToL(k, l, basicAnimalList);
 
         //then
-        int result = 100 + 120 + 55 + 30 + 43 + 87 + 23 + 51 + 91 + 12 + 15 + 61 + 41;
-        assertThat(sum).isEqualTo(result);
+        Map<Animal.Type, Integer> result = Map.of(
+            Animal.Type.CAT, 100 + 43 + 91,
+            Animal.Type.DOG, 120 + 55 + 87 + 23 + 12,
+            Animal.Type.FISH, 30 + 15 + 41,
+            Animal.Type.SPIDER, 51 + 61);
+        assertThat(sums).isEqualTo(result);
     }
 
     @Test

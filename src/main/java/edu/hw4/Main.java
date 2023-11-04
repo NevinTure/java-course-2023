@@ -123,11 +123,14 @@ public class Main {
             .anyMatch(v -> v.height() > k && Objects.equals(v.type(), Animal.Type.DOG));
     }
 
-    public static Integer getWeightSumOfAnimalWithAgeFromKToL(int k, int l, List<Animal> animals) {
+    public static Map<Animal.Type, Integer> getWeightSumOfAnimalsWithAgeFromKToL(int k, int l, List<Animal> animals) {
         return animals
             .stream()
             .filter(v -> v.age() >= k && v.age() <= l)
-            .reduce(0, (v1, v2) -> v1 + v2.weight(), Integer::sum);
+            .collect(Collectors
+                .groupingBy(Animal::type, Collectors.summingInt(Animal::weight)
+                )
+            );
     }
 
     public static List<Animal> sortByTypeThenSexThenName(List<Animal> animals) {
@@ -155,13 +158,8 @@ public class Main {
         return listOfAnimals
             .stream()
             .flatMap(Collection::stream)
-            .reduce((v1, v2) ->
-                !Objects.equals(v1.type(), Animal.Type.FISH)
-                    ? v2
-                    : !Objects.equals(v2.type(), Animal.Type.FISH)
-                    ? v1
-                    : v1.weight() > v2.weight()
-                    ? v1 : v2)
+            .filter(v -> v.type() != null && v.type().equals(Animal.Type.FISH))
+            .reduce((v1, v2) -> v1.weight() > v2.weight() ? v1 : v2)
             .orElse(null);
     }
 
