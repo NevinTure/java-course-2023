@@ -98,8 +98,8 @@ public class HW5Test {
         return new Arguments[] {
             Arguments.of("А123ВЕ777", true),
             Arguments.of("О777ОО177", true),
-            Arguments.of("А123ВЕ77", false),
-            Arguments.of("А123ВЕ77", false)
+            Arguments.of("А123ВГ77", false),
+            Arguments.of("А123ВЕ7777", false)
         };
     }
 
