@@ -2,8 +2,10 @@ package edu.project3;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Statistics {
@@ -15,6 +17,8 @@ public class Statistics {
     private final Map<String, Long> requiredResourcesCounter;
     private final Map<Integer, Long> statusCodesCounter;
     private final long averageResponseSize;
+    private final Map<String, HttpStatus> mostCodesByRemoteAddress;
+    private final Long uniqueUsersCounter;
 
     public Statistics(List<NginxLogEntry> entries, LocalDate from, LocalDate to) {
         this.from = from;
@@ -24,6 +28,8 @@ public class Statistics {
         this.requiredResourcesCounter = calculateRequiredResources();
         this.statusCodesCounter = calculateStatusCodes();
         this.averageResponseSize = calculateAverageResponseSize();
+        this.mostCodesByRemoteAddress = calculateMostCodesByRemoteAddress();
+        this.uniqueUsersCounter = calculateUniqueUsers();
     }
 
     private List<NginxLogEntry> trimEntries(List<NginxLogEntry> entries) {
@@ -57,8 +63,8 @@ public class Statistics {
             .stream()
             .collect(Collectors
                 .groupingBy(
-                    v -> v.status().getExact()
-                    , Collectors.counting()
+                    v -> v.status().getExact(),
+                    Collectors.counting()
                 )
             );
     }
@@ -67,6 +73,38 @@ public class Statistics {
         return entries
             .stream()
             .reduce(0L, (v1, v2) -> v1 + v2.bodyBytesSend(), Long::sum) / entries.size();
+    }
+
+    private Map<String, HttpStatus> calculateMostCodesByRemoteAddress() {
+        return entries
+            .stream()
+            .collect(Collectors.groupingBy(NginxLogEntry::remoteAddr))
+            .entrySet()
+            .stream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                v -> v
+                    .getValue()
+                    .stream()
+                    .collect(Collectors.groupingBy(
+                        Function.identity(),
+                        Collectors.counting()
+                    ))
+                    .entrySet()
+                    .stream()
+                    .max(Map.Entry.comparingByValue())
+                    .get()
+                    .getKey()
+                    .status()
+            ));
+    }
+
+    private long calculateUniqueUsers() {
+        return entries
+            .stream()
+            .collect(Collectors.groupingBy(NginxLogEntry::remoteAddr))
+            .entrySet()
+            .size();
     }
 
     public long getTotalEntries() {
@@ -83,5 +121,41 @@ public class Statistics {
 
     public long getAverageResponseSize() {
         return averageResponseSize;
+    }
+
+    public Map<String, HttpStatus> getMostCodesByRemoteAddress() {
+        return mostCodesByRemoteAddress;
+    }
+
+    public Long getUniqueUsersCounter() {
+        return uniqueUsersCounter;
+    }
+
+    public Map<String, Long> getFirstKMostRequiredResources(int k) {
+        return requiredResourcesCounter
+            .entrySet()
+            .stream()
+            .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+            .limit(k)
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (v1, v2) -> v1,
+                LinkedHashMap::new
+            ));
+    }
+
+    public Map<Integer, Long> getFirstKMostStatusCodes(int k) {
+        return statusCodesCounter
+            .entrySet()
+            .stream()
+            .sorted(Map.Entry.<Integer, Long>comparingByValue().reversed())
+            .limit(k)
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (v1, v2) -> v1,
+                LinkedHashMap::new
+            ));
     }
 }
