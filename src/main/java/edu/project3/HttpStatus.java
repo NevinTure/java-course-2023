@@ -6,6 +6,7 @@ public class HttpStatus {
 
     private int exact;
     private StatusType type;
+    private String info;
 
     enum StatusType {
         INFO,
@@ -17,6 +18,7 @@ public class HttpStatus {
 
     public HttpStatus(int exact) {
         this.exact = exact;
+        this.info = HttpStatusUtil.getByCode(exact);
     }
 
     public int getExact() {
@@ -35,6 +37,10 @@ public class HttpStatus {
             };
         }
         return type;
+    }
+
+    public String getInfo() {
+        return info;
     }
 
     @Override public boolean equals(Object o) {

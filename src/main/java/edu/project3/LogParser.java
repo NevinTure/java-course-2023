@@ -3,6 +3,7 @@ package edu.project3;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +11,7 @@ public class LogParser {
     private static final Pattern ENTRY_PATTERN = Pattern
         .compile("(?<ip>\\d+\\.\\d+\\.\\d+\\.\\d+)" +
             " - (?<remoteUser>\\S+) " +
-            "\\[(?<dateTime>[\\s\\S]+]) " +
+            "\\[(?<dateTime>[\\s\\S]+)] " +
             "\"(?<method>[A-Z]+) " +
             "(?<uri>\\S*) " +
             "(?<protocol>\\S+)\" " +
@@ -48,7 +49,9 @@ public class LogParser {
     }
 
     private static class LogBuilder {
-        private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("dd/MMM/y:HH:mm:ss XX");
+        private static final DateTimeFormatter TIME_FORMAT =
+            DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
+        //Z ZZ XX
         private String remoteAddr;
         private String remoteUser;
         private OffsetDateTime timeLocal;

@@ -158,4 +158,16 @@ public class Statistics {
                 LinkedHashMap::new
             ));
     }
+
+    public List<NginxLogEntry> getEntries() {
+        return entries;
+    }
+
+    public LocalDate getFrom() {
+        return from;
+    }
+
+    public LocalDate getTo() {
+        return to;
+    }
 }

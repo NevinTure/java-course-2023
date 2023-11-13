@@ -10,22 +10,32 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileDataResolver {
 
     private final static String DEFAULT_BASE_DIR = System.getProperty("java.io.tmpdir");
     private final static String FILE_PREFIX = "tempLog_";
     private final static String FILE_SUFFIX = ".txt";
+    private final static Pattern START_DIR_PATTERN = Pattern.compile("([^*]*)[/\\\\]");
 
     public static List<String> get(String rawPath) {
         if (rawPath.contains("://")) {
             return resolveUrlLines(rawPath);
         } else {
-            return resolvePathLines(rawPath);
+            List<Path> paths = getPaths(rawPath);
+            return resolvePathLines(paths);
         }
     }
 
@@ -53,9 +63,42 @@ public class FileDataResolver {
         }
     }
 
-    public static List<String> resolvePathLines(String pathStr) {
+    private static List<Path> getPaths(String rawPath) {
+        if (new File(rawPath).exists()) {
+            return List.of(Path.of(rawPath));
+        }
+        List<Path> paths = new ArrayList<>();
+        Path start = getStartLocation(rawPath);
+        String pattern = "glob:" + rawPath.replaceAll("\\\\", "/");
+        PathMatcher matcher = FileSystems.getDefault().getPathMatcher(pattern);
         try {
-            return Files.readAllLines(Path.of(pathStr));
+            Files.walkFileTree(start, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+                    if (matcher.matches(path)) {
+                        paths.add(path);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return paths;
+    }
+
+    private static Path getStartLocation(String pathStr) {
+        Matcher matcher = START_DIR_PATTERN.matcher(pathStr);
+        matcher.find();
+        return Path.of(matcher.group(1));
+    }
+    public static List<String> resolvePathLines(List<Path> paths) {
+        List<String> data = new ArrayList<>();
+        try {
+            for (Path path : paths) {
+                data.addAll(Files.readAllLines(path));
+            }
+            return data;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

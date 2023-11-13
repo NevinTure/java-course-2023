@@ -14,8 +14,9 @@ public class ArgumentsParser {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("--path")) {
                 i++;
-                while (!args[i].startsWith("--")) {
+                while (i < args.length && !args[i].startsWith("--")) {
                     pathStrs.add(args[i]);
+                    i++;
                 }
             }
         }
