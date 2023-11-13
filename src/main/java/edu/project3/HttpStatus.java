@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class HttpStatus {
 
-    private int exact;
+    private final int exact;
     private StatusType type;
-    private String info;
+    private final String info;
 
     enum StatusType {
         INFO,
@@ -41,6 +41,13 @@ public class HttpStatus {
 
     public String getInfo() {
         return info;
+    }
+
+    @Override public String toString() {
+        return "HttpStatus{" +
+            "exact=" + exact +
+            ", info='" + info + '\'' +
+            '}';
     }
 
     @Override public boolean equals(Object o) {

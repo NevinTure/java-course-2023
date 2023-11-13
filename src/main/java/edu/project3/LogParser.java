@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class LogParser {
     private static final Pattern ENTRY_PATTERN = Pattern
-        .compile("(?<ip>\\d+\\.\\d+\\.\\d+\\.\\d+)" +
+        .compile("(?<ip>\\S+)" +
             " - (?<remoteUser>\\S+) " +
             "\\[(?<dateTime>[\\s\\S]+)] " +
             "\"(?<method>[A-Z]+) " +

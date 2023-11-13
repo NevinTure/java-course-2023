@@ -1,22 +1,15 @@
 package edu.project3;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class FileDataResolver {
 
-    private final static String DEFAULT_BASE_DIR = System.getProperty("java.io.tmpdir");
+    private final static String DEFAULT_TEMP_DIR = System.getProperty("java.io.tmpdir");
     private final static String FILE_PREFIX = "tempLog_";
     private final static String FILE_SUFFIX = ".txt";
     private final static Pattern START_DIR_PATTERN = Pattern.compile("([^*]*)[/\\\\]");
@@ -48,19 +41,17 @@ public class FileDataResolver {
     }
 
     public static List<String> resolveUrlLines(String urlStr) {
-        File tempFile;
-        try (ReadableByteChannel byteChannel = Channels.newChannel(new URL(urlStr).openStream());
-            FileInputStream fis = new FileInputStream(
-                (tempFile = (Files.createTempFile(Path.of(DEFAULT_BASE_DIR), FILE_PREFIX, FILE_SUFFIX)).toFile())
-            )
-        ) {
-            tempFile.deleteOnExit();
-            FileChannel fileChannel = fis.getChannel();
-            fileChannel.transferFrom(byteChannel, 0, Long.MAX_VALUE);
-            return Files.readAllLines(tempFile.toPath());
+        Path tempFile;
+        List<String> lines;
+        try {
+            tempFile = Files.createTempFile(Path.of(DEFAULT_TEMP_DIR), FILE_PREFIX, FILE_SUFFIX);
+            Files.copy(new URL(urlStr).openStream(), tempFile, StandardCopyOption.REPLACE_EXISTING);
+            lines = Files.readAllLines(tempFile);
+            Files.delete(tempFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return lines;
     }
 
     private static List<Path> getPaths(String rawPath) {

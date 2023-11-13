@@ -35,8 +35,8 @@ public class Statistics {
     private List<NginxLogEntry> trimEntries(List<NginxLogEntry> entries) {
         List<NginxLogEntry> remainEntries = new ArrayList<>(entries.size() / 2);
         for (NginxLogEntry entry : entries) {
-            if (from.isBefore(entry.timeLocal().toLocalDate())
-                || to.isAfter(entry.timeLocal().toLocalDate())) {
+            if (!from.isAfter(entry.timeLocal().toLocalDate())
+                && !to.isBefore(entry.timeLocal().toLocalDate())) {
                 remainEntries.add(entry);
             }
         }

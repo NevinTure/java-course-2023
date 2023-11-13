@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class Request {
 
-    private HttpMethod method;
-    private String urn;
-    private String protocol;
+    private final HttpMethod method;
+    private final String urn;
+    private final String protocol;
 
     public Request(HttpMethod method, String urn, String protocol) {
         this.method = method;
@@ -16,6 +16,14 @@ public class Request {
 
     public String getUrn() {
         return urn;
+    }
+
+    @Override public String toString() {
+        return "Request{" +
+            "method=" + method +
+            ", urn='" + urn + '\'' +
+            ", protocol='" + protocol + '\'' +
+            '}';
     }
 
     @Override public boolean equals(Object o) {
