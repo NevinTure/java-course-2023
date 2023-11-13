@@ -6,7 +6,6 @@ public class HttpStatus {
 
     private final int exact;
     private StatusType type;
-    private final String info;
 
     enum StatusType {
         INFO,
@@ -18,7 +17,6 @@ public class HttpStatus {
 
     public HttpStatus(int exact) {
         this.exact = exact;
-        this.info = HttpStatusUtil.getByCode(exact);
     }
 
     public int getExact() {
@@ -39,14 +37,11 @@ public class HttpStatus {
         return type;
     }
 
-    public String getInfo() {
-        return info;
-    }
 
     @Override public String toString() {
         return "HttpStatus{" +
             "exact=" + exact +
-            ", info='" + info + '\'' +
+            ", info='" + HttpStatusInfoUtil.getByCode(exact) + '\'' +
             '}';
     }
 

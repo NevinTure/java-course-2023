@@ -1,5 +1,6 @@
 package edu.project3;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,10 @@ public class ArgumentsParser {
         if (pathStrs.isEmpty()) {
             throw new IllegalArgumentException("--path arguments required!");
         }
-        return pathStrs;
+        return pathStrs
+            .stream()
+            .flatMap(v -> PathResolver.get(v).stream())
+            .toList();
     }
 
     public static LocalDate parseFrom(String[] args) {

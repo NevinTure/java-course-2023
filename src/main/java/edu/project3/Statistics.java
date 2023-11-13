@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public class Statistics {
 
     private final List<NginxLogEntry> entries;
+    private final List<String> paths;
     private final LocalDate from;
     private final LocalDate to;
     private final long totalEntries;
@@ -20,7 +21,8 @@ public class Statistics {
     private final Map<String, HttpStatus> mostCodesByRemoteAddress;
     private final Long uniqueUsersCounter;
 
-    public Statistics(List<NginxLogEntry> entries, LocalDate from, LocalDate to) {
+    public Statistics(List<String> paths, List<NginxLogEntry> entries, LocalDate from, LocalDate to) {
+        this.paths = paths;
         this.from = from;
         this.to = to;
         this.entries = trimEntries(entries);
@@ -169,5 +171,9 @@ public class Statistics {
 
     public LocalDate getTo() {
         return to;
+    }
+
+    public List<String> getPaths() {
+        return paths;
     }
 }

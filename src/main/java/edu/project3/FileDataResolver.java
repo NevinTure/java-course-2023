@@ -21,14 +21,12 @@ public class FileDataResolver {
     private final static String DEFAULT_TEMP_DIR = System.getProperty("java.io.tmpdir");
     private final static String FILE_PREFIX = "tempLog_";
     private final static String FILE_SUFFIX = ".txt";
-    private final static Pattern START_DIR_PATTERN = Pattern.compile("([^*]*)[/\\\\]");
 
     public static List<String> get(String rawPath) {
         if (rawPath.contains("://")) {
             return resolveUrlLines(rawPath);
         } else {
-            List<Path> paths = getPaths(rawPath);
-            return resolvePathLines(paths);
+            return resolvePathLines(rawPath);
         }
     }
 
@@ -54,42 +52,9 @@ public class FileDataResolver {
         return lines;
     }
 
-    private static List<Path> getPaths(String rawPath) {
-        if (new File(rawPath).exists()) {
-            return List.of(Path.of(rawPath));
-        }
-        List<Path> paths = new ArrayList<>();
-        Path start = getStartLocation(rawPath);
-        String pattern = "glob:" + rawPath.replaceAll("\\\\", "/");
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher(pattern);
+    public static List<String> resolvePathLines(String rawPath) {
         try {
-            Files.walkFileTree(start, new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
-                    if (matcher.matches(path)) {
-                        paths.add(path);
-                    }
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return paths;
-    }
-
-    private static Path getStartLocation(String pathStr) {
-        Matcher matcher = START_DIR_PATTERN.matcher(pathStr);
-        matcher.find();
-        return Path.of(matcher.group(1));
-    }
-    public static List<String> resolvePathLines(List<Path> paths) {
-        List<String> data = new ArrayList<>();
-        try {
-            for (Path path : paths) {
-                data.addAll(Files.readAllLines(path));
-            }
-            return data;
+            return Files.readAllLines(Path.of(rawPath));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

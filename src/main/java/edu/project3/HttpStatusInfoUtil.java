@@ -3,7 +3,7 @@ package edu.project3;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpStatusUtil {
+public class HttpStatusInfoUtil {
 
     private static final Map<Integer, String> info;
 
@@ -29,7 +29,7 @@ public class HttpStatusUtil {
         info.put(502, "Bad Gateway");
     }
 
-    private HttpStatusUtil() {}
+    private HttpStatusInfoUtil() {}
 
     public static String getByCode(int code) {
         return info.getOrDefault(code,"Unknown code");
