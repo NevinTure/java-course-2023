@@ -1,6 +1,6 @@
-package edu.project3;
+package edu.project3.log_util;
 
-import java.nio.file.Path;
+import edu.project3.log_entry.Format;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,20 +14,18 @@ public class ArgumentsParser {
         List<String> pathStrs = new ArrayList<>();
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("--path")) {
-                i++;
-                while (i < args.length && !args[i].startsWith("--")) {
-                    pathStrs.add(args[i]);
-                    i++;
+                int j = i + 1;
+                while (j < args.length && !args[j].startsWith("--")) {
+                    pathStrs.add(args[j]);
+                    j++;
                 }
+                break;
             }
         }
         if (pathStrs.isEmpty()) {
             throw new IllegalArgumentException("--path arguments required!");
         }
-        return pathStrs
-            .stream()
-            .flatMap(v -> PathResolver.get(v).stream())
-            .toList();
+        return PathResolver.getAll(pathStrs);
     }
 
     public static LocalDate parseFrom(String[] args) {

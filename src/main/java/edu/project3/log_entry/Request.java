@@ -1,4 +1,4 @@
-package edu.project3;
+package edu.project3.log_entry;
 
 import java.util.Objects;
 
@@ -18,20 +18,16 @@ public class Request {
         return urn;
     }
 
-    @Override public String toString() {
-        return "Request{" +
-            "method=" + method +
-            ", urn='" + urn + '\'' +
-            ", protocol='" + protocol + '\'' +
-            '}';
-    }
-
     @Override public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Request request = (Request) o;
-        return method == request.method && Objects.equals(urn, request.urn) &&
-            Objects.equals(protocol, request.protocol);
+        return method == request.method && Objects.equals(urn, request.urn)
+            && Objects.equals(protocol, request.protocol);
     }
 
     @Override

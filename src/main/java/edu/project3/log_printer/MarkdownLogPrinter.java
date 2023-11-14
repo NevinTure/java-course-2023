@@ -1,5 +1,7 @@
-package edu.project3;
+package edu.project3.log_printer;
 
+import edu.project3.Statistics;
+import edu.project3.log_util.HttpStatusInfoUtil;
 import java.time.LocalDate;
 
 public class MarkdownLogPrinter implements LogPrinter {
@@ -7,18 +9,22 @@ public class MarkdownLogPrinter implements LogPrinter {
     private static final int DEFAULT_CODES_BY_REMOTE_ADDRESS_LIMIT = 15;
     private static final int DEFAULT_MOST_REQUIRED_RESOURCES_AMOUNT = 3;
     private static final int DEFAULT_MOST_STATUS_CODES_AMOUNT = 3;
+    private static final String TABLE_ROW_SEPARATOR = "|\n";
+    private final Statistics statistics;
+
+    public MarkdownLogPrinter(Statistics statistics) {
+        this.statistics = statistics;
+    }
 
     @Override
-    public String print(Statistics statistics) {
+    public String print() {
         return print(
-            statistics,
             DEFAULT_CODES_BY_REMOTE_ADDRESS_LIMIT,
             DEFAULT_MOST_REQUIRED_RESOURCES_AMOUNT,
             DEFAULT_MOST_STATUS_CODES_AMOUNT);
     }
 
     public String print(
-        Statistics statistics,
         int codesByRemoteAddressLimit,
         int mostRequiredResourcesAmount,
         int mostStatusCodesAmount) {
@@ -29,12 +35,13 @@ public class MarkdownLogPrinter implements LogPrinter {
             | Метрика | Значение |
             |:---:|:---:|
             """);
-        text.append("|Файл(-ы)|").append(String.join(", ", statistics.getPaths())).append("|\n");
-        text.append("|Начальная дата|").append(getStartDate(statistics.getFrom())).append("|\n");
-        text.append("|Конечная дата|").append(getEndDate(statistics.getTo())).append("|\n");
-        text.append("|Количество запросов|").append(statistics.getTotalEntries()).append("|\n");
-        text.append("|Средний размер|").append(statistics.getAverageResponseSize()).append("|\n");
-        text.append("|Количество уникальных пользователей|").append(statistics.getUniqueUsersCounter()).append("|\n");
+        text.append("|Файл(-ы)|").append(String.join(", ", statistics.getPaths())).append(TABLE_ROW_SEPARATOR);
+        text.append("|Начальная дата|").append(getStartDate(statistics.getFrom())).append(TABLE_ROW_SEPARATOR);
+        text.append("|Конечная дата|").append(getEndDate(statistics.getTo())).append(TABLE_ROW_SEPARATOR);
+        text.append("|Количество запросов|").append(statistics.getTotalEntries()).append(TABLE_ROW_SEPARATOR);
+        text.append("|Средний размер|").append(statistics.getAverageResponseSize()).append(TABLE_ROW_SEPARATOR);
+        text.append("|Количество уникальных пользователей|").append(statistics.getUniqueUsersCounter())
+            .append(TABLE_ROW_SEPARATOR);
         text.append("""
 
             #### Запрашиваемые ресурсы
@@ -48,7 +55,7 @@ public class MarkdownLogPrinter implements LogPrinter {
                 .append(entry.getKey())
                 .append("|")
                 .append(entry.getValue())
-                .append("|\n");
+                .append(TABLE_ROW_SEPARATOR);
         }
         text.append("""
 
@@ -65,7 +72,7 @@ public class MarkdownLogPrinter implements LogPrinter {
                 .append(HttpStatusInfoUtil.getByCode(entry.getKey()))
                 .append("|")
                 .append(entry.getValue())
-                .append("|\n");
+                .append(TABLE_ROW_SEPARATOR);
         }
         if (statistics.getUniqueUsersCounter() <= codesByRemoteAddressLimit) {
             text.append("""
@@ -81,7 +88,7 @@ public class MarkdownLogPrinter implements LogPrinter {
                     .append(entry.getKey())
                     .append("|")
                     .append(entry.getValue().getExact())
-                    .append("|\n");
+                    .append(TABLE_ROW_SEPARATOR);
             }
         }
         return text.toString();

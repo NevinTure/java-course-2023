@@ -1,4 +1,4 @@
-package edu.project3;
+package edu.project3.log_entry;
 
 import java.util.Objects;
 
@@ -23,6 +23,7 @@ public class HttpStatus {
         return exact;
     }
 
+    @SuppressWarnings("MagicNumber")
     public StatusType getType() {
         if (type == null) {
             type = switch (exact % 100) {
@@ -37,17 +38,13 @@ public class HttpStatus {
         return type;
     }
 
-
-    @Override public String toString() {
-        return "HttpStatus{" +
-            "exact=" + exact +
-            ", info='" + HttpStatusInfoUtil.getByCode(exact) + '\'' +
-            '}';
-    }
-
     @Override public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         HttpStatus that = (HttpStatus) o;
         return exact == that.exact && type == that.type;
     }

@@ -1,5 +1,7 @@
 package edu.project3;
 
+import edu.project3.log_entry.HttpStatus;
+import edu.project3.log_entry.NginxLogEntry;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

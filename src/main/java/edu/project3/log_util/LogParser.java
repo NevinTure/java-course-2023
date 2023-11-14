@@ -1,5 +1,9 @@
-package edu.project3;
+package edu.project3.log_util;
 
+import edu.project3.log_entry.HttpMethod;
+import edu.project3.log_entry.HttpStatus;
+import edu.project3.log_entry.NginxLogEntry;
+import edu.project3.log_entry.Request;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -9,16 +13,19 @@ import java.util.regex.Pattern;
 
 public class LogParser {
     private static final Pattern ENTRY_PATTERN = Pattern
-        .compile("(?<ip>\\S+)" +
-            " - (?<remoteUser>\\S+) " +
-            "\\[(?<dateTime>[\\s\\S]+)] " +
-            "\"(?<method>[A-Z]+) " +
-            "(?<uri>\\S*) " +
-            "(?<protocol>\\S+)\" " +
-            "(?<status>\\d+) " +
-            "(?<bytes>\\d+) " +
-            "\"(?<referer>\\S+)\" " +
-            "\"(?<userAgent>[\\S\\s]+)\"");
+        .compile("(?<ip>\\S+)"
+            + " - (?<remoteUser>\\S+) "
+            + "\\[(?<dateTime>[\\s\\S]+)] "
+            + "\"(?<method>[A-Z]+) "
+            + "(?<uri>\\S*) "
+            + "(?<protocol>\\S+)\" "
+            + "(?<status>\\d+) "
+            + "(?<bytes>\\d+) "
+            + "\"(?<referer>\\S+)\" "
+            + "\"(?<userAgent>[\\S\\s]+)\"");
+
+    private LogParser() {
+    }
 
     public static NginxLogEntry parse(String logStr) {
         Matcher matcher = ENTRY_PATTERN.matcher(logStr);

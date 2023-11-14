@@ -1,4 +1,4 @@
-package edu.project3;
+package edu.project3.log_util;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,9 @@ import java.util.regex.Pattern;
 
 public class PathResolver {
     private final static Pattern START_DIR_PATTERN = Pattern.compile("([^*]*)[/\\\\]");
+
+    private PathResolver() {
+    }
 
     public static List<String> get(String rawPath) {
         if (rawPath.contains("://")) {

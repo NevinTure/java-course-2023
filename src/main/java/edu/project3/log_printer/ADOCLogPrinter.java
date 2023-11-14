@@ -1,23 +1,31 @@
-package edu.project3;
+package edu.project3.log_printer;
 
+import edu.project3.Statistics;
+import edu.project3.log_util.HttpStatusInfoUtil;
 import java.time.LocalDate;
 
 public class ADOCLogPrinter implements LogPrinter {
     private static final int DEFAULT_CODES_BY_REMOTE_ADDRESS_LIMIT = 15;
     private static final int DEFAULT_MOST_REQUIRED_RESOURCES_AMOUNT = 3;
     private static final int DEFAULT_MOST_STATUS_CODES_AMOUNT = 3;
+    private static final String NEW_LINE = "\n\n";
+    private static final String TABLE_ROW_SEPARATOR = "\n|";
+    private final Statistics statistics;
+
+    public ADOCLogPrinter(Statistics statistics) {
+        this.statistics = statistics;
+    }
 
     @Override
-    public String print(Statistics statistics) {
+    public String print() {
         return print(
-            statistics,
             DEFAULT_CODES_BY_REMOTE_ADDRESS_LIMIT,
             DEFAULT_MOST_REQUIRED_RESOURCES_AMOUNT,
             DEFAULT_MOST_STATUS_CODES_AMOUNT);
     }
 
+    @SuppressWarnings("MultipleStringLiterals")
     public String print(
-        Statistics statistics,
         int codesByRemoteAddressLimit,
         int mostRequiredResourcesAmount,
         int mostStatusCodesAmount) {
@@ -29,12 +37,13 @@ public class ADOCLogPrinter implements LogPrinter {
             | Метрика | Значение
 
             """);
-        text.append("|Файл(-ы)\n|").append(String.join(", ", statistics.getPaths())).append("\n\n");
-        text.append("|Начальная дата\n|").append(getStartDate(statistics.getFrom())).append("\n\n");
-        text.append("|Конечная дата\n|").append(getEndDate(statistics.getTo())).append("\n\n");
-        text.append("|Количество запросов\n|").append(statistics.getTotalEntries()).append("\n\n");
-        text.append("|Средний размер\n|").append(statistics.getAverageResponseSize()).append("\n\n");
-        text.append("|Количество уникальных пользователей\n|").append(statistics.getUniqueUsersCounter()).append("\n|===");
+        text.append("|Файл(-ы)\n|").append(String.join(", ", statistics.getPaths())).append(NEW_LINE);
+        text.append("|Начальная дата\n|").append(getStartDate(statistics.getFrom())).append(NEW_LINE);
+        text.append("|Конечная дата\n|").append(getEndDate(statistics.getTo())).append(NEW_LINE);
+        text.append("|Количество запросов\n|").append(statistics.getTotalEntries()).append(NEW_LINE);
+        text.append("|Средний размер\n|").append(statistics.getAverageResponseSize()).append(NEW_LINE);
+        text.append("|Количество уникальных пользователей\n|").append(statistics.getUniqueUsersCounter())
+            .append("\n|===");
         text.append("""
 
 
@@ -45,11 +54,11 @@ public class ADOCLogPrinter implements LogPrinter {
             """);
         for (var entry : statistics.getFirstKMostRequiredResources(mostRequiredResourcesAmount).entrySet()) {
             text
-                .append("\n|")
+                .append(TABLE_ROW_SEPARATOR)
                 .append(entry.getKey())
-                .append("\n|")
+                .append(TABLE_ROW_SEPARATOR)
                 .append(entry.getValue())
-                .append("\n");
+                .append(TABLE_ROW_SEPARATOR);
         }
         text.append("|===");
         text.append("""
@@ -62,13 +71,13 @@ public class ADOCLogPrinter implements LogPrinter {
             """);
         for (var entry : statistics.getFirstKMostStatusCodes(mostStatusCodesAmount).entrySet()) {
             text
-                .append("\n|")
+                .append(TABLE_ROW_SEPARATOR)
                 .append(entry.getKey())
-                .append("\n|")
+                .append(TABLE_ROW_SEPARATOR)
                 .append(HttpStatusInfoUtil.getByCode(entry.getKey()))
-                .append("\n|")
+                .append(TABLE_ROW_SEPARATOR)
                 .append(entry.getValue())
-                .append("\n");
+                .append(TABLE_ROW_SEPARATOR);
         }
         text.append("|===");
         if (statistics.getUniqueUsersCounter() <= codesByRemoteAddressLimit) {
@@ -82,11 +91,11 @@ public class ADOCLogPrinter implements LogPrinter {
                 """);
             for (var entry : statistics.getMostCodesByRemoteAddress().entrySet()) {
                 text
-                    .append("\n|")
+                    .append(TABLE_ROW_SEPARATOR)
                     .append(entry.getKey())
-                    .append("\n|")
+                    .append(TABLE_ROW_SEPARATOR)
                     .append(entry.getValue().getExact())
-                    .append("\n");
+                    .append(TABLE_ROW_SEPARATOR);
             }
         }
         text.append("|===");

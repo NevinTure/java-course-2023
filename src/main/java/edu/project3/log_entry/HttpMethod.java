@@ -1,4 +1,4 @@
-package edu.project3;
+package edu.project3.log_entry;
 
 public enum HttpMethod {
 
