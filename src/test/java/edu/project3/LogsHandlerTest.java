@@ -9,6 +9,7 @@ import edu.project3.log_printer.LogPrinter;
 import edu.project3.log_util.ArgumentsParser;
 import edu.project3.log_util.LogParser;
 import edu.project3.log_util.PathResolver;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,6 +20,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,10 +33,11 @@ public class LogsHandlerTest {
 
     private static Stream<Arguments> wrongArgs() {
         return Stream.of(
-            Arguments.of(new String[] {"--path", "/*.txt", "--from", "2010-10-11", "--to", "2012-01-01", "--format",
+            Arguments.of(new String[] {"--path", sep("/*.txt"), "--from", "2010-10-11", "--to", "2012-01-01",
+                "--format",
                 "wrong format"}, IllegalArgumentException.class),
             Arguments.of(new String[] {"--path"}, RuntimeException.class),
-            Arguments.of(new String[] {"--path", "/*.txt", "--from", "wrong format"}, DateTimeParseException.class)
+            Arguments.of(new String[] {"--path", sep("/*.txt"), "--from", "wrong format"}, DateTimeParseException.class)
         );
     }
 
@@ -69,18 +72,18 @@ public class LogsHandlerTest {
         );
     }
 
-    private final static String TEST_FOLDER = "src/test/java/edu/project3/test_logs";
+    private final static String TEST_FOLDER = sep("src/test/java/edu/project3/test_logs");
 
     @Test
     public void testArgumentParser() {
         //given
-        Path testFolder = Path.of(TEST_FOLDER + "\\args_parser").toAbsolutePath();
+        Path testFolder = Path.of(TEST_FOLDER + sep("/args_parser")).toAbsolutePath();
         Format format;
         LocalDate from;
         LocalDate to;
         List<String> paths;
         String[] args =
-            {"--path", testFolder + "\\*", "--from", "2010-10-11", "--to", "2012-01-01", "--format", "adoc"};
+            {"--path", testFolder + sep("/*"), "--from", "2010-10-11", "--to", "2012-01-01", "--format", "adoc"};
 
         //when
         List<Path> tempFiles = new ArrayList<>(5);
@@ -127,16 +130,16 @@ public class LogsHandlerTest {
     @Test
     public void testPathResolver() {
         //given
-        String rawPath = "src/test/**/test_logs/*";
+        String rawPath = sep("src/test/**/test_logs/*");
 
         //when
         List<String> paths = PathResolver.get(rawPath);
 
         //then
         List<String> expectedResult = List.of(
-            "src\\test\\java\\edu\\project3\\test_logs\\logs.txt",
-            "src\\test\\java\\edu\\project3\\test_logs\\logs2.txt",
-            "src\\test\\java\\edu\\project3\\test_logs\\logs3.txt"
+            sep("src/test/java/edu/project3/test_logs/logs.txt"),
+            sep("src/test/java/edu/project3/test_logs/logs2.txt"),
+            sep("src/test/java/edu/project3/test_logs/logs3.txt")
         );
         assertThat(paths).containsExactlyInAnyOrderElementsOf(expectedResult);
     }
@@ -179,8 +182,8 @@ public class LogsHandlerTest {
     public void testADOCLogPrinter() {
         //given
         String[] args =
-            {"--path", "./src/test/java/edu/project3/test_logs/logs.txt",
-                "./src/test/java/edu/project3/test_logs/logs2.txt",
+            {"--path", sep("./src/test/java/edu/project3/test_logs/logs.txt"),
+                sep("./src/test/java/edu/project3/test_logs/logs2.txt"),
                 "--format", "ADOC"};
 
         //when
@@ -196,7 +199,7 @@ public class LogsHandlerTest {
             | Метрика | Значение
 
             |Файл(-ы)
-            |./src/test/java/edu/project3/test_logs/logs.txt, ./src/test/java/edu/project3/test_logs/logs2.txt
+            |%s, %s
 
             |Начальная дата
             |-
@@ -242,7 +245,10 @@ public class LogsHandlerTest {
             |200
             |OK
             |6
-            |===""";
+            |===""".formatted(
+            sep("./src/test/java/edu/project3/test_logs/logs.txt"),
+            sep("./src/test/java/edu/project3/test_logs/logs2.txt")
+        );
             assertThat(result).isEqualTo(expectedResult);
     }
 
@@ -250,8 +256,8 @@ public class LogsHandlerTest {
     public void testMarkdownLogPrinter() {
         //given
         String[] args =
-            {"--path", "./src/test/java/edu/project3/test_logs/logs.txt",
-                "./src/test/java/edu/project3/test_logs/logs2.txt",
+            {"--path", sep("./src/test/java/edu/project3/test_logs/logs.txt"),
+                sep("./src/test/java/edu/project3/test_logs/logs2.txt"),
                 "--format", "MARKDOWN"};
 
         //when
@@ -265,7 +271,7 @@ public class LogsHandlerTest {
 
             | Метрика | Значение |
             |:---:|:---:|
-            |Файл(-ы)|./src/test/java/edu/project3/test_logs/logs.txt, ./src/test/java/edu/project3/test_logs/logs2.txt|
+            |Файл(-ы)|%s, %s|
             |Начальная дата|-|
             |Конечная дата|-|
             |Количество запросов|35|
@@ -286,7 +292,10 @@ public class LogsHandlerTest {
             |304|Not Modified|23|
             |404|Not Found|6|
             |200|OK|6|
-            """;
+            """.formatted(
+            sep("./src/test/java/edu/project3/test_logs/logs.txt"),
+            sep("./src/test/java/edu/project3/test_logs/logs2.txt")
+        );
         assertThat(result).isEqualTo(expectedResult);
     }
 
@@ -294,7 +303,7 @@ public class LogsHandlerTest {
     public void testMostCodesByRemoteUser() {
         //given
         String[] args =
-            {"--path", "./src/test/java/edu/project3/test_logs/logs3.txt"};
+            {"--path", sep("./src/test/java/edu/project3/test_logs/logs3.txt")};
 
         //when
         LogsHandler handler = new LogsHandler(args);
@@ -308,5 +317,9 @@ public class LogsHandlerTest {
             "37.16.72.233", new HttpStatus(304)
         );
         assertThat(result).containsAllEntriesOf(expectedResult);
+    }
+
+    private static String sep(String path) {
+        return path.replaceAll("/", Matcher.quoteReplacement(File.separator));
     }
 }
