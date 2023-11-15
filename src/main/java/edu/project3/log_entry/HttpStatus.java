@@ -1,5 +1,6 @@
 package edu.project3.log_entry;
 
+import edu.project3.log_util.HttpStatusInfoUtil;
 import java.util.Objects;
 
 public class HttpStatus {
@@ -36,6 +37,10 @@ public class HttpStatus {
             };
         }
         return type;
+    }
+
+    @Override public String toString() {
+        return exact + ": " + HttpStatusInfoUtil.getByCode(exact);
     }
 
     @Override public boolean equals(Object o) {

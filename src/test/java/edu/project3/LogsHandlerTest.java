@@ -1,5 +1,14 @@
 package edu.project3;
 
+import edu.project3.log_entry.Format;
+import edu.project3.log_entry.HttpMethod;
+import edu.project3.log_entry.HttpStatus;
+import edu.project3.log_entry.NginxLogEntry;
+import edu.project3.log_entry.Request;
+import edu.project3.log_printer.LogPrinter;
+import edu.project3.log_util.ArgumentsParser;
+import edu.project3.log_util.LogParser;
+import edu.project3.log_util.PathResolver;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,15 +18,8 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
-import edu.project3.log_entry.Format;
-import edu.project3.log_entry.HttpMethod;
-import edu.project3.log_entry.HttpStatus;
-import edu.project3.log_entry.NginxLogEntry;
-import edu.project3.log_entry.Request;
-import edu.project3.log_util.ArgumentsParser;
-import edu.project3.log_util.LogParser;
-import edu.project3.log_util.PathResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -146,5 +148,164 @@ public class LogsHandlerTest {
 
         //then
         assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void testStatistics() {
+        //given
+        String[] args = {"--path",
+            "https://raw.githubusercontent.com/elastic/examples/master/Common%20Data%20Formats/nginx_logs/nginx_logs"};
+
+        //when
+        LogsHandler handler = new LogsHandler(args);
+        Statistics statistics = handler.getStatistics();
+
+        //then
+        long uniqueUsersCounterExpected = 2660;
+        long totalEntriesExpected = 51462;
+        long averageResponseTimeExpected = 659509;
+        var mostStatusCodesExpected = Map.of(404, 33876L, 304, 13330L, 200, 4028L);
+        var mostRequiredResources =
+            Map.of("/downloads/product_1", 30285L, "/downloads/product_2", 21104L, "/downloads/product_3", 73L);
+        assertThat(statistics.getUniqueUsersCounter()).isEqualTo(uniqueUsersCounterExpected);
+        assertThat(statistics.getTotalEntries()).isEqualTo(totalEntriesExpected);
+        assertThat(statistics.getAverageResponseSize()).isEqualTo(averageResponseTimeExpected);
+        assertThat(statistics.getFirstKMostStatusCodes(3)).containsAllEntriesOf(mostStatusCodesExpected);
+        assertThat(statistics.getFirstKMostRequiredResources(3)).containsAllEntriesOf(mostRequiredResources);
+    }
+
+    @Test
+    public void testADOCLogPrinter() {
+        //given
+        String[] args =
+            {"--path", "./src/test/java/edu/project3/test_logs/logs.txt",
+                "./src/test/java/edu/project3/test_logs/logs2.txt",
+                "--format", "ADOC"};
+
+        //when
+        LogsHandler handler = new LogsHandler(args);
+        LogPrinter printer = handler.getLogPrinter();
+        String result = printer.print(0, 3, 3);
+
+        //then
+        String expectedResult = """
+            ==== Общая информация
+
+            |===
+            | Метрика | Значение
+
+            |Файл(-ы)
+            |./src/test/java/edu/project3/test_logs/logs.txt, ./src/test/java/edu/project3/test_logs/logs2.txt
+
+            |Начальная дата
+            |-
+
+            |Конечная дата
+            |-
+
+            |Количество запросов
+            |35
+
+            |Средний размер
+            |301
+
+            |Количество уникальных пользователей
+            |14
+            |===
+
+            ==== Запрашиваемые ресурсы
+
+            |===
+            | Ресурс | Количество
+
+            |/downloads/product_1
+            |24
+
+            |/downloads/product_2
+            |11
+            |===
+
+            ==== Коды ответа
+
+            |===
+            | Коды | Имя | Количество
+
+            |304
+            |Not Modified
+            |23
+
+            |404
+            |Not Found
+            |6
+
+            |200
+            |OK
+            |6
+            |===""";
+            assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void testMarkdownLogPrinter() {
+        //given
+        String[] args =
+            {"--path", "./src/test/java/edu/project3/test_logs/logs.txt",
+                "./src/test/java/edu/project3/test_logs/logs2.txt",
+                "--format", "MARKDOWN"};
+
+        //when
+        LogsHandler handler = new LogsHandler(args);
+        LogPrinter printer = handler.getLogPrinter();
+        String result = printer.print(0, 3, 3);
+
+        //then
+        String expectedResult = """
+            #### Общая информация
+
+            | Метрика | Значение |
+            |:---:|:---:|
+            |Файл(-ы)|./src/test/java/edu/project3/test_logs/logs.txt, ./src/test/java/edu/project3/test_logs/logs2.txt|
+            |Начальная дата|-|
+            |Конечная дата|-|
+            |Количество запросов|35|
+            |Средний размер|301|
+            |Количество уникальных пользователей|14|
+
+            #### Запрашиваемые ресурсы
+
+            | Ресурс | Количество |
+            |:---:|:---:|
+            |/downloads/product_1|24|
+            |/downloads/product_2|11|
+
+            #### Коды ответа
+
+            | Коды | Имя | Количество |
+            |:---:|:---:|:---:|
+            |304|Not Modified|23|
+            |404|Not Found|6|
+            |200|OK|6|
+            """;
+        assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void testMostCodesByRemoteUser() {
+        //given
+        String[] args =
+            {"--path", "./src/test/java/edu/project3/test_logs/logs3.txt"};
+
+        //when
+        LogsHandler handler = new LogsHandler(args);
+        Statistics statistics = handler.getStatistics();
+        var result = statistics.getMostCodesByRemoteAddress();
+
+        //then
+        Map<String, HttpStatus> expectedResult = Map.of(
+            "217.212.243.9", new HttpStatus(404),
+            "216.46.173.126", new HttpStatus(304),
+            "37.16.72.233", new HttpStatus(304)
+        );
+        assertThat(result).containsAllEntriesOf(expectedResult);
     }
 }

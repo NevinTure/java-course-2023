@@ -42,7 +42,8 @@ public class LogsHandler {
         return statistics;
     }
 
-    private LogPrinter getLogPrinter() {
+    public LogPrinter getLogPrinter() {
+        getStatistics();
         if (format.equals(Format.ADOC)) {
             return new ADOCLogPrinter(statistics);
         } else if (format.equals(Format.MARKDOWN)) {

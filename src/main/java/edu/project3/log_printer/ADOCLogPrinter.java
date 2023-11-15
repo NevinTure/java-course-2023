@@ -58,7 +58,7 @@ public class ADOCLogPrinter implements LogPrinter {
                 .append(entry.getKey())
                 .append(TABLE_ROW_SEPARATOR)
                 .append(entry.getValue())
-                .append(TABLE_ROW_SEPARATOR);
+                .append("\n");
         }
         text.append("|===");
         text.append("""
@@ -77,7 +77,7 @@ public class ADOCLogPrinter implements LogPrinter {
                 .append(HttpStatusInfoUtil.getByCode(entry.getKey()))
                 .append(TABLE_ROW_SEPARATOR)
                 .append(entry.getValue())
-                .append(TABLE_ROW_SEPARATOR);
+                .append("\n");
         }
         text.append("|===");
         if (statistics.getUniqueUsersCounter() <= codesByRemoteAddressLimit) {
@@ -97,8 +97,8 @@ public class ADOCLogPrinter implements LogPrinter {
                     .append(entry.getValue().getExact())
                     .append(TABLE_ROW_SEPARATOR);
             }
+            text.append("|===");
         }
-        text.append("|===");
         return text.toString();
     }
 
