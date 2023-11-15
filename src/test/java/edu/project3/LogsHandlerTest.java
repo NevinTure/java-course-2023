@@ -135,7 +135,8 @@ public class LogsHandlerTest {
         //then
         List<String> expectedResult = List.of(
             "src\\test\\java\\edu\\project3\\test_logs\\logs.txt",
-            "src\\test\\java\\edu\\project3\\test_logs\\logs2.txt"
+            "src\\test\\java\\edu\\project3\\test_logs\\logs2.txt",
+            "src\\test\\java\\edu\\project3\\test_logs\\logs3.txt"
         );
         assertThat(paths).containsExactlyInAnyOrderElementsOf(expectedResult);
     }
@@ -303,7 +304,7 @@ public class LogsHandlerTest {
         //then
         Map<String, HttpStatus> expectedResult = Map.of(
             "217.212.243.9", new HttpStatus(404),
-            "216.46.173.126", new HttpStatus(304),
+            "216.46.173.126", new HttpStatus(404),
             "37.16.72.233", new HttpStatus(304)
         );
         assertThat(result).containsAllEntriesOf(expectedResult);

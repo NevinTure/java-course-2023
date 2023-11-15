@@ -51,11 +51,11 @@ public class HttpStatus {
             return false;
         }
         HttpStatus that = (HttpStatus) o;
-        return exact == that.exact && type == that.type;
+        return exact == that.exact;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(exact, type);
+        return Objects.hash(exact);
     }
 }

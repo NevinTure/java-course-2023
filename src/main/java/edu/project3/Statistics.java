@@ -90,6 +90,7 @@ public class Statistics {
                 v -> v
                     .getValue()
                     .stream()
+                    .map(NginxLogEntry::status)
                     .collect(Collectors.groupingBy(
                         Function.identity(),
                         Collectors.counting()
@@ -99,7 +100,6 @@ public class Statistics {
                     .max(Map.Entry.comparingByValue())
                     .get()
                     .getKey()
-                    .status()
             ));
     }
 
