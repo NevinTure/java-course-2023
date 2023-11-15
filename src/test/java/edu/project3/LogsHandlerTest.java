@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -72,12 +73,10 @@ public class LogsHandlerTest {
         );
     }
 
-    private final static String TEST_FOLDER = sep("src/test/java/edu/project3/test_logs");
-
     @Test
     public void testArgumentParser() {
         //given
-        Path testFolder = Path.of(TEST_FOLDER + sep("/args_parser")).toAbsolutePath();
+        Path testFolder = Path.of(System.getProperty("java.io.tmpdir") + sep("/args_parser"));
         Format format;
         LocalDate from;
         LocalDate to;
@@ -88,6 +87,9 @@ public class LogsHandlerTest {
         //when
         List<Path> tempFiles = new ArrayList<>(5);
         try {
+            if (!Files.exists(testFolder)) {
+                Files.createDirectory(testFolder);
+            }
             for (int i = 1; i < 4; i++) {
                 Path path = Files.createTempFile(testFolder, "log" + i, ".txt");
                 tempFiles.add(path);
