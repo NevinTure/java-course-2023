@@ -37,7 +37,9 @@ public class Filters {
                 channel.read(byteBuffer);
                 byte[] bytes = byteBuffer.array();
                 int[] array = new int[nums.length];
-                for(int i = 0; i < nums.length; array[i] = Byte.toUnsignedInt(bytes[i++]));
+                for (int i = 0; i < nums.length; i++) {
+                    array[i] = Byte.toUnsignedInt(bytes[i]);
+                }
                 return Arrays.equals(nums, array);
             } catch (RuntimeException e) {
                 throw new RuntimeException(e);
