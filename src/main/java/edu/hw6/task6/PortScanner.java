@@ -1,4 +1,4 @@
-package edu.hw6;
+package edu.hw6.task6;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -10,19 +10,23 @@ import java.util.List;
 public class PortScanner {
 
     private final List<PortInfo> occupiedPorts;
-    private final static int FIRST_PORT_NUMBER = 0;
-    private final static int LAST_PORT_NUMBER = 49151;
+    private final static int DEFAULT_FIRST_PORT_NUMBER = 0;
+    private final static int DEFAULT_LAST_PORT_NUMBER = 49151;
     private final static int AMOUNT_OF_SPACES = 7;
 
     public PortScanner() {
         occupiedPorts = new ArrayList<>();
     }
 
-    public void scanAllPorts() {
-        for (int i = FIRST_PORT_NUMBER; i <= LAST_PORT_NUMBER; i++) {
+    public void scanPortInRange(int firstPortNumber, int lastPortNumber) {
+        for (int i = firstPortNumber; i <= lastPortNumber; i++) {
             checkTCPPort(i);
             checkUDPPort(i);
         }
+    }
+
+    public void scanAllPorts() {
+        scanPortInRange(DEFAULT_FIRST_PORT_NUMBER, DEFAULT_LAST_PORT_NUMBER);
     }
 
     private void checkTCPPort(int port) {

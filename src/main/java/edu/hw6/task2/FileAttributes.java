@@ -1,4 +1,4 @@
-package edu.hw6;
+package edu.hw6.task2;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

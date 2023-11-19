@@ -1,4 +1,4 @@
-package edu.hw6;
+package edu.hw6.task1;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -107,6 +107,7 @@ public class DiskMap implements Map<String, String> {
         if (storage.containsKey((String) key)) {
             String oldValue = storage.get(key);
             removeFromDisk(key);
+            storage.remove(key);
             return oldValue;
         }
         return null;
@@ -174,6 +175,22 @@ public class DiskMap implements Map<String, String> {
         for (Path path : paths) {
             download(path);
         }
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DiskMap diskMap = (DiskMap) o;
+        return Objects.equals(parentDir, diskMap.parentDir) && Objects.equals(storage, diskMap.storage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(parentDir, storage);
     }
 
     @Override public String toString() {

@@ -1,4 +1,4 @@
-package edu.hw6;
+package edu.hw6.task3;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -71,7 +71,7 @@ public class Filters {
     public static AbstractFilter regexContains(String regex) {
         return (t) -> {
             String name = String.valueOf(t.getFileName());
-            Pattern pattern = Pattern.compile(".*" + regex + ".*");
+            Pattern pattern = Pattern.compile(regex);
             return pattern.matcher(name).find();
         };
     }

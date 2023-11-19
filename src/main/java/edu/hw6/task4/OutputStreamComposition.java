@@ -1,4 +1,4 @@
-package edu.hw6;
+package edu.hw6.task4;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;

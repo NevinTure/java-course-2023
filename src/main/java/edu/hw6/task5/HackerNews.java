@@ -1,4 +1,4 @@
-package edu.hw6;
+package edu.hw6.task5;
 
 import java.io.IOException;
 import java.net.URI;
@@ -17,7 +17,7 @@ public class HackerNews {
     }
 
     public static long[] hackerNewsTopStories() {
-        String body = getBody(URI.create("https://hacker-news.firebaseio.com/v0/topstories.json"));
+        String body = getBodyAsString(URI.create("https://hacker-news.firebaseio.com/v0/topstories.json"));
         if (body.isEmpty()) {
             return new long[0];
         } else {
@@ -27,7 +27,7 @@ public class HackerNews {
 
     public static String news(long id) {
         String rawURI = "https://hacker-news.firebaseio.com/v0/item/" + id + ".json";
-        String body = getBody(URI.create(rawURI));
+        String body = getBodyAsString(URI.create(rawURI));
         Matcher matcher = TITLE_PATTERN.matcher(body);
         if (matcher.find()) {
             return matcher.group(1);
@@ -36,7 +36,7 @@ public class HackerNews {
         }
     }
 
-    private static String getBody(URI uri) {
+    private static String getBodyAsString(URI uri) {
         try (HttpClient client = HttpClient.newHttpClient()) {
             HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -52,7 +52,8 @@ public class HackerNews {
     private static long[] parseTopNews(String body) {
         String[] rawBody = body.split(",");
         rawBody[0] = rawBody[0].substring(1);
-        rawBody[rawBody.length - 1] = rawBody[rawBody.length - 1].substring(1);
+        String lastEntry = rawBody[rawBody.length - 1];
+        rawBody[rawBody.length - 1] = lastEntry.substring(0, lastEntry.length() - 1);
         return Arrays.stream(rawBody).mapToLong(Long::parseLong).toArray();
     }
 }
