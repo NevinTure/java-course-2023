@@ -194,6 +194,6 @@ public class HW7Test {
         double result = appMulti.approximate(n, threadsAmount);
 
         //then
-        assertThat(result).isBetween(3.14, 3.142);
+        assertThat(result).isBetween(3.14, 3.143);
     }
 }
