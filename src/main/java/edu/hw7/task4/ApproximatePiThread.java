@@ -4,6 +4,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ApproximatePiThread extends Thread {
 
+    private final static double RADIUS = 0.5;
+    private final static double CENTER_X = 0.5;
+    private final static double CENTER_Y = 0.5;
     private final ThreadLocalRandom random;
     private final int iterAmount;
     private int totalCount;
@@ -16,14 +19,11 @@ public class ApproximatePiThread extends Thread {
 
     @Override
     public void run() {
-        double radius = 0.5;
-        double centerX = 0.5;
-        double centerY = 0.5;
         for (int i = 0; i < iterAmount; i++) {
             double x = random.nextDouble();
             double y = random.nextDouble();
-            double distance = getDistanceBetween(x, y, centerX, centerY);
-            if (distance <= radius) {
+            double distance = getDistanceBetween(x, y, CENTER_X, CENTER_Y);
+            if (distance <= RADIUS) {
                 circleCount++;
             }
             totalCount++;

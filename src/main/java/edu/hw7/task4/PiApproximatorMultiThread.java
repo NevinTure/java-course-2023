@@ -5,6 +5,7 @@ import java.util.List;
 
 public class PiApproximatorMultiThread {
 
+    @SuppressWarnings("MagicNumber")
     public double approximate(int n, int threadsAmount) {
         int iterByThread = n / threadsAmount;
         List<ApproximatePiThread> threads = new ArrayList<>();

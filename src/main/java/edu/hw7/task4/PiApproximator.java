@@ -1,26 +1,27 @@
 package edu.hw7.task4;
 
-import java.security.SecureRandom;
+import java.util.Random;
 
 public class PiApproximator {
 
-    private final SecureRandom random;
+    private final static double RADIUS = 0.5;
+    private final static double CENTER_X = 0.5;
+    private final static double CENTER_Y = 0.5;
+    private final Random random;
     private int totalCount;
     private int circleCount;
 
     public PiApproximator() {
-        random = new SecureRandom();
+        random = new Random();
     }
 
+    @SuppressWarnings("MagicNumber")
     public double approximate(int n) {
-        double radius = 0.5;
-        double centerX = 0.5;
-        double centerY = 0.5;
         for (int i = 0; i < n; i++) {
             double x = random.nextDouble();
             double y = random.nextDouble();
-            double distance = getDistanceBetween(x, y, centerX, centerY);
-            if (distance <= radius) {
+            double distance = getDistanceBetween(x, y, CENTER_X, CENTER_Y);
+            if (distance <= RADIUS) {
                 circleCount++;
             }
             totalCount++;
