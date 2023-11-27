@@ -20,7 +20,7 @@ public class PiApproximator {
         for (int i = 0; i < n; i++) {
             double x = random.nextDouble();
             double y = random.nextDouble();
-            double distance = getDistanceBetween(x, y, CENTER_X, CENTER_Y);
+            double distance = getDistanceFromCenter(x, y);
             if (distance <= RADIUS) {
                 circleCount++;
             }
@@ -29,7 +29,7 @@ public class PiApproximator {
         return (double) (4 * circleCount) / totalCount;
     }
 
-    private double getDistanceBetween(double x1, double y1, double x2, double y2) {
-        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    private double getDistanceFromCenter(double x1, double y1) {
+        return Math.sqrt(Math.pow(CENTER_X - x1, 2) + Math.pow(CENTER_Y - y1, 2));
     }
 }
