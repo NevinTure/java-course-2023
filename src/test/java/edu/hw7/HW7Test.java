@@ -77,6 +77,7 @@ public class HW7Test {
                 db.add(person1);
                 db.add(person2);
                 db.add(person3);
+                db.delete(1);
             });
             service.submit(() -> {
                 try {
@@ -88,7 +89,6 @@ public class HW7Test {
                     throw new RuntimeException(e);
                 }
             });
-            db.delete(1);
             Future<List<Person>> findByNameResult = service.submit(() -> db.findByName("name2"));
             Future<List<Person>> findByAddressResult = service.submit(() -> db.findByAddress("address2"));
             Future<List<Person>> findByPhoneResult = service.submit(() -> db.findByPhone("phone3"));
@@ -130,6 +130,7 @@ public class HW7Test {
                 db.add(person1);
                 db.add(person2);
                 db.add(person3);
+                db.delete(1);
             });
             service.submit(() -> {
                 try {
@@ -141,7 +142,6 @@ public class HW7Test {
                     throw new RuntimeException(e);
                 }
             });
-            db.delete(1);
             Future<List<Person>> findByNameResult = service.submit(() -> db.findByName("name2"));
             Future<List<Person>> findByAddressResult = service.submit(() -> db.findByAddress("address2"));
             Future<List<Person>> findByPhoneResult = service.submit(() -> db.findByPhone("phone3"));
