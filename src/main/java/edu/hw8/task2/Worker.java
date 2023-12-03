@@ -13,6 +13,7 @@ public class Worker extends Thread {
         this.isInterrupted = isInterrupted;
     }
 
+    @SuppressWarnings("RegexpSinglelineJava")
     @Override
     public void run() {
         while (!isInterrupted.get()) {
