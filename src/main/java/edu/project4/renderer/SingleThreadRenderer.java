@@ -34,11 +34,12 @@ public class SingleThreadRenderer implements Renderer {
         long seed
     ) {
         random.setSeed(seed);
+        int counter = 0;
         for (int i = 0; i < samples; i++) {
             Point pw = randomPoint(world);
 
             for (short step = 0; step < iterPerSample; step++) {
-                Transformation variation = variations.get(step % variations.size());
+                Transformation variation = variations.get(counter++ % variations.size());
                 AffineFactors factors = affine.getRandom(random);
                 pw = affine.apply(pw, factors);
                 pw = transform(pw, variation);
