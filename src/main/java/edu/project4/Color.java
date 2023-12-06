@@ -4,15 +4,16 @@ public record Color(int r, int g, int b) {
 
     public static final Color BLACK = new Color(0, 0, 0);
 
-    public int ARGB() {
-        return (255 << 24) | (r << 16) | (g << 8) | b;
+    @SuppressWarnings("MagicNumber")
+    public int getRGB() {
+        return (r << 16) | (g << 8) | b;
     }
 
     public Color divColor(int divider) {
         return new Color(
-            this.r() / 2,
-            this.g() / 2,
-            this.b() / 2);
+            this.r() / divider,
+            this.g() / divider,
+            this.b() / divider);
     }
 
     public Color setGammaLog(double normal, double gamma) {

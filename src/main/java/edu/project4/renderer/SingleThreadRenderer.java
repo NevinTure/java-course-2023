@@ -13,7 +13,7 @@ import java.util.Random;
 public class SingleThreadRenderer implements Renderer {
 
     private final int symmetry;
-    private final Random RANDOM = new Random();
+    private final Random random = new Random();
 
     public SingleThreadRenderer(int symmetry) {
         this.symmetry = symmetry;
@@ -33,13 +33,13 @@ public class SingleThreadRenderer implements Renderer {
         short iterPerSample,
         long seed
     ) {
-        RANDOM.setSeed(seed);
+        random.setSeed(seed);
         for (int i = 0; i < samples; i++) {
             Point pw = randomPoint(world);
 
             for (short step = 0; step < iterPerSample; step++) {
                 Transformation variation = variations.get(step % variations.size());
-                AffineFactors factors = affine.getRandom(RANDOM);
+                AffineFactors factors = affine.getRandom(random);
                 pw = affine.apply(pw, factors);
                 pw = transform(pw, variation);
 
@@ -67,8 +67,8 @@ public class SingleThreadRenderer implements Renderer {
     }
 
     private Point randomPoint(Rect rect) {
-        double x = RANDOM.nextDouble(rect.xMin(), rect.xMax());
-        double y = RANDOM.nextDouble(rect.yMin(), rect.yMax());
+        double x = random.nextDouble(rect.xMin(), rect.xMax());
+        double y = random.nextDouble(rect.yMin(), rect.yMax());
         return new Point(x, y);
     }
 

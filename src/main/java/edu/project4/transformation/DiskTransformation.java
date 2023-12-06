@@ -7,8 +7,8 @@ public class DiskTransformation implements Transformation {
     public Point apply(Point point) {
         double x = point.x();
         double y = point.y();
-        double r = Math.sqrt(x *x + y*y) * Math.PI;
-        double theta = Math.atan2(y,x) / Math.PI;
+        double r = Math.sqrt(x * x + y * y) * Math.PI;
+        double theta = Math.atan2(y, x) / Math.PI;
         return new Point(
             theta * Math.sin(r),
             theta * Math.cos(r)

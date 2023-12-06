@@ -5,6 +5,7 @@ public class Pixel {
     private Color color;
     private int hitCount;
     private double normal;
+
     public Pixel() {
     }
 
