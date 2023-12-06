@@ -38,6 +38,7 @@ public class FractalFlameTest {
         int affineTranAmount = 10;
         int samples = 1000000;
         short iterPerSample = 3;
+        double gamma = 2.2;
         long seed = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         Path filename =
             Paths.get(Path.of("").toAbsolutePath().toString(), "src", "test", "java", "edu", "project4", "single.png");
@@ -53,14 +54,29 @@ public class FractalFlameTest {
             new HorseshoeTransformation()
         );
         AffineTransformation affine = new AffineTransformation(affineTranAmount);
+        long start = System.currentTimeMillis();
         renderer.render(image, rect, variations, affine, samples, iterPerSample, seed);
-        ImageProcessor processor = new GammaLogProcessor(2.2);
+        System.out.println(System.currentTimeMillis() - start);
+        ImageProcessor processor = new GammaLogProcessor(gamma);
         processor.process(image);
         ImageUtils.save(image, filename, ImageFormat.PNG);
 
         //then
         assertThat(Files.exists(filename)).isTrue();
     }
+
+    /*
+      кол-во сэмплов/итераций на сэмпл | время один поток | кол-во потоков/время
+      1 млн/5                                1978 мсек            2/2412 мсек
+      1 млн/5                                1978 мсек            4/2081 мсек
+      1 млн/5                                1978 мсек            8/2050 мсек
+      10 млн/5                               17.17 сек            2/23.7 сек
+      10 млн/5                               17.17 сек            4/24.1 сек
+      10 млн/5                               17.17 сек            8/20.9 сек
+      50 млн/5                               76.4 сек             2/2 мин
+      50 млн/5                               76.4 сек             4/1.95 мин
+      50 млн/5                               76.4 сек             8/1.88 мин
+    */
 
     @Test
     public void testMultiThreadRenderer() {
@@ -72,10 +88,11 @@ public class FractalFlameTest {
         int yMin = -1;
         int yMax = 1;
         int symmetry = 2;
-        int threadsAmount = 5;
+        int threadsAmount = 2;
         int affineTranAmount = 10;
         int samples = 1000000;
         short iterPerSample = 3;
+        double gamma = 2.2;
         long seed = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         Path filename =
             Paths.get(Path.of("").toAbsolutePath().toString(), "src", "test", "java", "edu", "project4", "multi.jpeg");
@@ -91,8 +108,10 @@ public class FractalFlameTest {
             new SwirlTransformation()
         );
         AffineTransformation affine = new AffineTransformation(affineTranAmount);
+        long start = System.currentTimeMillis();
         renderer.render(image, rect, variations, affine, samples, iterPerSample, seed);
-        ImageProcessor processor = new GammaLogProcessor(2.2);
+        System.out.println(System.currentTimeMillis() - start);
+        ImageProcessor processor = new GammaLogProcessor(gamma);
         processor.process(image);
         ImageUtils.save(image, filename, ImageFormat.JPEG);
 
