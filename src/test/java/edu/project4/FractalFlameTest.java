@@ -54,9 +54,7 @@ public class FractalFlameTest {
             new HorseshoeTransformation()
         );
         AffineTransformation affine = new AffineTransformation(affineTranAmount);
-        long start = System.currentTimeMillis();
         renderer.render(image, rect, variations, affine, samples, iterPerSample, seed);
-        System.out.println(System.currentTimeMillis() - start);
         ImageProcessor processor = new GammaLogProcessor(gamma);
         processor.process(image);
         ImageUtils.save(image, filename, ImageFormat.PNG);
@@ -108,9 +106,7 @@ public class FractalFlameTest {
             new SwirlTransformation()
         );
         AffineTransformation affine = new AffineTransformation(affineTranAmount);
-        long start = System.currentTimeMillis();
         renderer.render(image, rect, variations, affine, samples, iterPerSample, seed);
-        System.out.println(System.currentTimeMillis() - start);
         ImageProcessor processor = new GammaLogProcessor(gamma);
         processor.process(image);
         ImageUtils.save(image, filename, ImageFormat.JPEG);
