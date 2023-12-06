@@ -4,6 +4,7 @@ public class Pixel {
 
     private Color color;
     private int hitCount;
+    private double normal;
     public Pixel() {
     }
 
@@ -25,5 +26,13 @@ public class Pixel {
 
     public int getHitCount() {
         return hitCount;
+    }
+
+    public double getNormal() {
+        return normal;
+    }
+
+    public void setNormal(double normal) {
+        this.normal = normal;
     }
 }

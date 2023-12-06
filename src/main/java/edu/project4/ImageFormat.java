@@ -3,5 +3,10 @@ package edu.project4;
 public enum ImageFormat {
     JPEG,
     BMP,
-    PNG
+    PNG;
+
+    @Override
+    public String toString() {
+        return super.toString().toLowerCase();
+    }
 }
