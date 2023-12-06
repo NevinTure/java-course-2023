@@ -1,13 +1,8 @@
-package edu.project4;
+package edu.project4.transformation;
+
+import edu.project4.Point;
 
 public class SphereTransformation implements Transformation {
-
-    public static final Color color = new Color(0, 255, 0);
-
-    @Override
-    public Color paint() {
-        return color;
-    }
 
     @Override
     public Point apply(Point point) {

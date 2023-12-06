@@ -14,7 +14,7 @@ public final class PopularCommandExecutor {
     }
 
     public void updatePackages() {
-        tryExecute("apt update && apt upgrade -y");
+        tryExecute("apt update && apt upgrade -yMin");
     }
 
     public void tryExecute(String command) {
