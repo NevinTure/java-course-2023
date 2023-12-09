@@ -2,34 +2,49 @@ package edu.hw9.task1;
 
 import java.io.Closeable;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class StatsCollector implements Closeable {
 
-    private final Map<String, Double> stats;
+    private final Map<String, Metrics> stats;
     private final ExecutorService service;
+    private final ReadWriteLock lock;
 
     public StatsCollector(int threadsAmount) {
-        stats = new ConcurrentHashMap<>();
-        service = Executors.newFixedThreadPool(threadsAmount);
+        this.stats = new ConcurrentHashMap<>();
+        this.service = Executors.newFixedThreadPool(threadsAmount);
+        this.lock = new ReentrantReadWriteLock();
     }
 
     public void push(String metricName, double[] data) {
-        service.submit(() ->
-            stats.put(metricName + "Average", Arrays.stream(data).average().orElse(0)));
-        service.submit(() ->
-            stats.put(metricName + "Max", Arrays.stream(data).max().orElse(0)));
-        service.submit(() ->
-            stats.put(metricName + "Min", Arrays.stream(data).min().orElse(0)));
-        service.submit(() ->
-            stats.put(metricName + "Sum", Arrays.stream(data).sum()));
+        Metrics metrics = stats.computeIfAbsent(metricName, v -> new Metrics(metricName));
+        service.submit(() -> {
+            lock.writeLock().lock();
+            try {
+                metrics.setEntriesAmount(metrics.getEntriesAmount() + data.length);
+                metrics.setMax(Double.max(Arrays.stream(data).max().orElseThrow(), metrics.getMax()));
+                metrics.setMin(Double.min(Arrays.stream(data).min().orElseThrow(), metrics.getMin()));
+                metrics.setSum(Arrays.stream(data).sum() + metrics.getSum());
+                metrics.setAverage(metrics.getSum() / metrics.getEntriesAmount());
+            } finally {
+                lock.writeLock().unlock();
+            }
+        });
     }
 
-    public Map<String, Double> stats() {
-        return stats;
+    public Map<String, Metrics> stats() {
+        lock.readLock().lock();
+        try {
+            return new HashMap<>(stats);
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     @Override
