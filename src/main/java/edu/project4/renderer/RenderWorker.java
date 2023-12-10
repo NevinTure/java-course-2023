@@ -10,21 +10,17 @@ import edu.project4.transformation.Transformation;
 import edu.project4.util.RandomUtils;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
 
 public class RenderWorker implements Renderer {
 
-    private final Lock lock;
     private final int symmetry;
     private Random random;
 
-    public RenderWorker(int symmetry, Lock lock)  {
-        this.lock = lock;
+    public RenderWorker(int symmetry) {
         this.symmetry = symmetry;
     }
 
-    public RenderWorker(Lock lock) {
-        this.lock = lock;
+    public RenderWorker() {
         this.symmetry = 1;
     }
 
@@ -60,7 +56,7 @@ public class RenderWorker implements Renderer {
                     int y = (int) pwr.y();
                     if (canvas.contains(x, y)) {
                         Pixel pixel = canvas.pixel(x, y);
-                        lock.lock();
+                        pixel.getLock().lock();
                         try {
                             if (pixel.getHitCount() == 0) {
                                 pixel.setColor(factors.color());
@@ -69,7 +65,7 @@ public class RenderWorker implements Renderer {
                             }
                             pixel.addHit();
                         } finally {
-                            lock.unlock();
+                            pixel.getLock().unlock();
                         }
                     }
                 }

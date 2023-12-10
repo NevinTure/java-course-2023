@@ -7,8 +7,6 @@ import edu.project4.transformation.Transformation;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class MultiThreadRenderer implements Renderer {
 
@@ -37,10 +35,9 @@ public class MultiThreadRenderer implements Renderer {
     ) {
         int samplesPerThread = samples / threadsAmount;
         try (ExecutorService service = Executors.newFixedThreadPool(threadsAmount)) {
-            Lock lock = new ReentrantLock();
             for (int i = 0; i < threadsAmount; i++) {
                 service.submit(() -> {
-                    Renderer renderer = new RenderWorker(symmetry, lock);
+                    Renderer renderer = new RenderWorker(symmetry);
                     renderer.render(
                         canvas, world, variations, affine, samplesPerThread, iterPerSample, seed
                     );

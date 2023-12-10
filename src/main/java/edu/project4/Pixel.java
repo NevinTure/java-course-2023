@@ -1,15 +1,20 @@
 package edu.project4;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 public class Pixel {
 
     private Color color;
     private int hitCount;
     private double normal;
+    private final ReentrantLock lock;
 
     public Pixel() {
+        this.lock = new ReentrantLock();
     }
 
     public Pixel(Color color) {
+        this();
         this.color = color;
     }
 
@@ -35,5 +40,9 @@ public class Pixel {
 
     public void setNormal(double normal) {
         this.normal = normal;
+    }
+
+    public ReentrantLock getLock() {
+        return lock;
     }
 }
