@@ -1,10 +1,12 @@
 package edu.hw9.task1;
 
 import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Metrics {
 
     private final String name;
+    private final ReentrantLock lock;
     private double sum;
     private double max;
     private double min;
@@ -15,6 +17,7 @@ public class Metrics {
         this.name = name;
         this.max = Double.MIN_VALUE;
         this.min = Double.MAX_VALUE;
+        this.lock = new ReentrantLock();
     }
 
     public String getName() {
@@ -28,6 +31,7 @@ public class Metrics {
         this.min = min;
         this.average = average;
         this.entriesAmount = entriesAmount;
+        this.lock = new ReentrantLock();
     }
 
     public double getSum() {
@@ -68,6 +72,10 @@ public class Metrics {
 
     public void setEntriesAmount(double entriesAmount) {
         this.entriesAmount = entriesAmount;
+    }
+
+    public ReentrantLock getLock() {
+        return lock;
     }
 
     @Override public boolean equals(Object o) {
