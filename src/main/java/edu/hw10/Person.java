@@ -3,10 +3,10 @@ package edu.hw10;
 public class Person {
 
     private String name;
-    private int age;
+    private byte age;
     private String address;
 
-    public Person(String name, @Min(10) @Max(20) int age, String address) {
+    public Person(String name, @Min(10) @Max(20) byte age, String address) {
         this.name = name;
         this.age = age;
         this.address = address;
@@ -27,7 +27,7 @@ public class Person {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(byte age) {
         this.age = age;
     }
 

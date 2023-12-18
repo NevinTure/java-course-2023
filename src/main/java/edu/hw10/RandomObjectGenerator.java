@@ -16,7 +16,7 @@ public class RandomObjectGenerator {
     public RandomObjectGenerator() {
     }
 
-    public <T> T nextObject(Class<T> clazz, String fabricMethod) throws NoSuchFieldException {
+    public <T> T nextObject(Class<T> clazz, String fabricMethod) {
         if (fabricMethod.equals(CONSTRUCTOR)) {
             Constructor<?>[] constructors = clazz.getDeclaredConstructors();
             Constructor<?> constructor = getAppropriateConstructor(constructors);
@@ -65,25 +65,44 @@ public class RandomObjectGenerator {
     }
 
     private Object getRandomObjectOfType(Parameter param) {
+        Object preHandled;
+        if (param.getType().isPrimitive()) {
+            preHandled = ClassUtils.getRandomPrimitive(param.getType());
+        } else {
+            preHandled = null;
+        }
         if (param.getAnnotations().length > 0) {
             List<AnnotationHandler> handlers = getHandlers(param);
-            return applyHandlers(handlers);
+            preHandled = applyHandlers(handlers, preHandled);
         }
-        if (param.getType().isPrimitive()) {
-            return ClassUtils.getRandomPrimitive(param.getType());
-        } else {
-            return null;
-        }
+        return preHandled;
     }
 
     private List<AnnotationHandler> getHandlers(Parameter param) {
         Annotation[] annotations = param.getAnnotations();
         List<AnnotationHandler> handlers = new ArrayList<>(annotations.length);
+        MinMaxAnnotationHandler minMax = null;
         for (Annotation annotation : annotations) {
             Class<? extends Annotation> annotationClass = annotation.annotationType();
             switch (annotationClass.getSimpleName()) {
-                case "Min" -> handlers.add(new MinAnnotationHandler(param));
-                case "Max" -> handlers.add(new MaxAnnotationHandler(param));
+                case "Min" -> {
+                    if (minMax == null) {
+                        minMax = new MinMaxAnnotationHandler();
+                        minMax.setMin(param);
+                        handlers.add(minMax);
+                    } else {
+                        minMax.setMin(param);
+                    }
+                }
+                case "Max" -> {
+                    if (minMax == null) {
+                        minMax = new MinMaxAnnotationHandler();
+                        minMax.setMax(param);
+                        handlers.add(minMax);
+                    } else {
+                        minMax.setMax(param);
+                    }
+                }
                 case "NotNull" -> handlers.add(new NotNullAnnotationHandler(param.getType()));
                 default -> handlers.size();
             }
@@ -91,8 +110,7 @@ public class RandomObjectGenerator {
         return handlers;
     }
 
-    private Object applyHandlers(List<AnnotationHandler> handlers) {
-        Object preHandled = null;
+    private Object applyHandlers(List<AnnotationHandler> handlers, Object preHandled) {
         for (AnnotationHandler handler : handlers) {
             preHandled = handler.handle(preHandled);
         }
