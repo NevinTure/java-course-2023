@@ -1,41 +1,19 @@
 package edu.hw10;
 
+import edu.hw10.task1.annotations.Max;
+import edu.hw10.task1.annotations.Min;
+import edu.hw10.task1.annotations.NotNull;
+import lombok.Data;
+
+@Data
 public class Person {
 
-    private String name;
-    private byte age;
-    private String address;
+    private final String name;
+    private final Dog dog;
+    private final String address;
+    private final int age;
 
-    public Person(String name, @Min(10) @Max(20) byte age, String address) {
-        this.name = name;
-        this.age = age;
-        this.address = address;
-    }
-
-    public Person() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(byte age) {
-        this.age = age;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public static Person create(@NotNull String name, @NotNull Dog dog, String address, @Min(10) @Max(40) int age) {
+        return new Person(name, dog, address, age);
     }
 }

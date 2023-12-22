@@ -1,10 +1,11 @@
-package edu.hw10;
+package edu.hw10.task1.annotation_handlers;
 
+import edu.hw10.task1.RandomObjectGenerator;
 import java.lang.reflect.InvocationTargetException;
 
 public class NotNullAnnotationHandler implements AnnotationHandler {
 
-    private Class<?> clazz;
+    private final Class<?> clazz;
 
     public NotNullAnnotationHandler(Class<?> clazz) {
         this.clazz = clazz;
@@ -14,7 +15,12 @@ public class NotNullAnnotationHandler implements AnnotationHandler {
     public Object handle(Object preHandled) {
         if (preHandled == null) {
             try {
-                return clazz.getDeclaredConstructor().newInstance();
+                if (clazz.isRecord()) {
+                    RandomObjectGenerator rog = new RandomObjectGenerator();
+                    return rog.nextObject(clazz);
+                } else {
+                    return clazz.getDeclaredConstructor().newInstance();
+                }
             } catch (NoSuchMethodException
                      | InstantiationException
                      | IllegalAccessException

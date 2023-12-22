@@ -1,5 +1,7 @@
-package edu.hw10;
+package edu.hw10.task1.annotation_handlers;
 
+import edu.hw10.task1.annotations.Max;
+import edu.hw10.task1.annotations.Min;
 import java.lang.reflect.Parameter;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -34,60 +36,63 @@ public class MinMaxAnnotationHandler implements AnnotationHandler {
         }
     }
 
+    @SuppressWarnings("CyclomaticComplexity")
     private Object getNewValue(Object obj) {
+        Object result;
         switch (obj) {
             case Integer i -> {
                 if ((int) obj < min || (int) obj > max) {
-                    return RANDOM.nextInt((int) min, (int) max);
+                    result = RANDOM.nextInt((int) min, (int) max);
                 } else {
-                    return obj;
+                    result = obj;
                 }
             }
             case Byte i -> {
                 if ((byte) obj < min || (byte) obj > max) {
-                    return (byte) RANDOM.nextLong(min, max);
+                    result = (byte) RANDOM.nextLong(min, max);
                 } else {
-                    return obj;
+                    result = obj;
                 }
             }
             case Short i -> {
                 if ((short) obj < min || (short) obj > max) {
-                    return (short) RANDOM.nextLong(min, max);
+                    result = (short) RANDOM.nextLong(min, max);
                 } else {
-                    return obj;
+                    result = obj;
                 }
             }
             case Long i -> {
                 if ((long) obj < min || (long) obj > max) {
-                    return RANDOM.nextLong(min, max);
+                    result = RANDOM.nextLong(min, max);
                 } else {
-                    return obj;
+                    result = obj;
                 }
             }
             case Character i -> {
                 if ((char) obj < min || (char) obj > max) {
-                    return (char) RANDOM.nextLong(min, max);
+                    result = (char) RANDOM.nextLong(min, max);
                 } else {
-                    return obj;
+                    result = obj;
                 }
             }
             case Double i -> {
                 if ((double) obj < min || (double) obj > max) {
-                    return RANDOM.nextDouble(min, max);
+                    result = RANDOM.nextDouble(min, max);
                 } else {
-                    return obj;
+                    result = obj;
                 }
             }
             case Float i -> {
                 if ((float) obj < min || (float) obj > max) {
-                    return RANDOM.nextFloat(min, max);
+                    result = RANDOM.nextFloat(min, max);
                 } else {
-                    return obj;
+                    result = obj;
                 }
             }
             default -> {
-                return null;
+                result = null;
             }
         }
+        return result;
     }
 }

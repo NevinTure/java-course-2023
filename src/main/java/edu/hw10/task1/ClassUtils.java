@@ -1,4 +1,4 @@
-package edu.hw10;
+package edu.hw10.task1;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;

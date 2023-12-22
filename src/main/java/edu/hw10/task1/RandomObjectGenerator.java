@@ -1,8 +1,12 @@
-package edu.hw10;
+package edu.hw10.task1;
 
+import edu.hw10.task1.annotation_handlers.AnnotationHandler;
+import edu.hw10.task1.annotation_handlers.MinMaxAnnotationHandler;
+import edu.hw10.task1.annotation_handlers.NotNullAnnotationHandler;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,42 +21,44 @@ public class RandomObjectGenerator {
     }
 
     public <T> T nextObject(Class<T> clazz, String fabricMethod) {
-        if (fabricMethod.equals(CONSTRUCTOR)) {
-            Constructor<?>[] constructors = clazz.getDeclaredConstructors();
-            Constructor<?> constructor = getAppropriateConstructor(constructors);
-            Parameter[] params = constructor.getParameters();
-            Object[] objParams = getRandomParams(params);
-            try {
+        try {
+            Parameter[] params;
+            Object[] objParams;
+            if (fabricMethod.equals(CONSTRUCTOR)) {
+                Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+                Constructor<?> constructor = getAppropriateConstructor(constructors);
+                params = constructor.getParameters();
+                objParams = getRandomParams(params);
                 return (T) constructor.newInstance(objParams);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
+            } else {
+                Method fabric = getAppropriateFabric(clazz, fabricMethod);
+                params = fabric.getParameters();
+                objParams = getRandomParams(params);
+                return (T) fabric.invoke(null, objParams);
             }
-//            System.out.println(Arrays.toString(clazz.getDeclaredFields()));
-//            System.out.println(constructor.getParameterCount());
-//            System.out.println(Arrays.toString(constructors));
+        } catch (InstantiationException
+                 | IllegalAccessException
+                 | InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
-//        switch (fabricMethod) {
-//            case "constructor" -> {
-//                Constructor<?>[] constructors = clazz.getDeclaredConstructors();
-//                Constructor<?> constructor = constructors[1];
-//                Parameter[] parameters = constructor.getParameters();
-//                Parameter parameter = parameters[1];
-//                Object[] instParams = new Object[parameters.length];
-//                Field field = clazz.getDeclaredField(parameter.getName());
-//                Annotation[] annotations = field.getDeclaredAnnotations();
-//                Class<?> type = parameter.getType();
-//                if (type.isPrimitive()) {
-//                    instParams[1] = generateRandomParam(type, annotations);
-//                }
-//            }
-//        }
-        return null;
+    }
+
+    public <T> T nextObject(Class<T> clazz) {
+        return nextObject(clazz, CONSTRUCTOR);
     }
 
     private Constructor<?> getAppropriateConstructor(Constructor<?>[] constructors) {
         return Arrays
             .stream(constructors)
             .max(Comparator.comparing(Constructor::getParameterCount))
+            .orElse(null);
+    }
+
+    private Method getAppropriateFabric(Class<?> clazz, String fabricMethod) {
+        return Arrays
+            .stream(clazz.getDeclaredMethods())
+            .filter(v -> v.getName().contains(fabricMethod))
+            .findFirst()
             .orElse(null);
     }
 
@@ -110,30 +116,11 @@ public class RandomObjectGenerator {
         return handlers;
     }
 
+    @SuppressWarnings("ParameterAssignment")
     private Object applyHandlers(List<AnnotationHandler> handlers, Object preHandled) {
         for (AnnotationHandler handler : handlers) {
             preHandled = handler.handle(preHandled);
         }
         return preHandled;
-    }
-
-    public <T> T nextObject(Class<T> clazz) throws NoSuchFieldException {
-        return nextObject(clazz, CONSTRUCTOR);
-    }
-
-    private Object generateRandomParam(Class<?> clazz, Annotation[] annotations) {
-//        if (clazz.isPrimitive()) {
-//
-//        }
-        return null;
-    }
-
-    private boolean isContainsAnnotation(String annotName, Annotation[] annotations) {
-        for (Annotation annotation : annotations) {
-            if (annotation.annotationType().getName().equals(annotName)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
