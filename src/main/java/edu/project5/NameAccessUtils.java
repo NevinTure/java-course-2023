@@ -10,7 +10,7 @@ import java.util.function.Function;
 public class NameAccessUtils {
 
     private final Class<?> clazz;
-    private final String METHOD_NAME = "name";
+    private final static String METHOD_NAME = "name";
 
     public NameAccessUtils(Class<?> clazz) {
         this.clazz = clazz;
