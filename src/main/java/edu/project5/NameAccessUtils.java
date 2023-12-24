@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
+import java.util.function.Function;
 
 public class NameAccessUtils {
 
@@ -33,19 +34,19 @@ public class NameAccessUtils {
         }
     }
 
-    public Getter getNameLambdaMetafactory() {
+    public Function<Student, String> getNameLambdaMetafactory() {
         MethodHandles.Lookup lookup = MethodHandles.lookup();
         MethodType type = MethodType.methodType(String.class);
-        MethodType getterSignature = MethodType.methodType(Getter.class);
-        MethodType getterTypes = MethodType.methodType(String.class, Student.class);
+        MethodType funcSignature = MethodType.methodType(Function.class);
+        MethodType funcTypes = MethodType.methodType(Object.class, Object.class);
         MethodType dynamic = MethodType.methodType(String.class, Student.class);
         try {
             MethodHandle lambdaImpl = lookup.findVirtual(clazz, METHOD_NAME, type);
-            return (Getter) LambdaMetafactory.metafactory(
+            return (Function<Student, String>) LambdaMetafactory.metafactory(
                     lookup,
-                    "get",
-                    getterSignature,
-                    getterTypes,
+                    "apply",
+                    funcSignature,
+                    funcTypes,
                     lambdaImpl,
                     dynamic
                 )

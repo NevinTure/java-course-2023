@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
@@ -39,15 +40,15 @@ public class ReflectionBenchmark {
     private Student student;
     private Method method;
     private MethodHandle methodHandle;
-    private Getter lambdaMetafactoryGetter;
+    private Function<Student, String> lambdaMetafactoryFunc;
 
     @Setup
     public void setup() {
         NameAccessUtils utils = new NameAccessUtils(Student.class);
-        student = new Student("Nikita", "Konstantinov");
+        student = new Student("name", "test");
         method = utils.getNameMethod();
         methodHandle = utils.getNameMethodHandle();
-        lambdaMetafactoryGetter = utils.getNameLambdaMetafactory();
+        lambdaMetafactoryFunc = utils.getNameLambdaMetafactory();
     }
 
 //    Benchmark                                         Mode  Cnt  Score   Error  Units
@@ -75,7 +76,7 @@ public class ReflectionBenchmark {
 
     @Benchmark
     public void reflectionLambdaMetafactory(Blackhole bh) {
-        String name = lambdaMetafactoryGetter.get(student);
+        String name = lambdaMetafactoryFunc.apply(student);
         bh.consume(name);
     }
 }
