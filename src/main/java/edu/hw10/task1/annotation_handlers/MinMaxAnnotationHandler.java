@@ -1,5 +1,6 @@
 package edu.hw10.task1.annotation_handlers;
 
+import edu.hw10.task1.ClassUtils;
 import edu.hw10.task1.annotations.Max;
 import edu.hw10.task1.annotations.Min;
 import java.lang.reflect.Parameter;
@@ -42,21 +43,21 @@ public class MinMaxAnnotationHandler implements AnnotationHandler {
         switch (obj) {
             case Integer i -> {
                 if ((int) obj < min || (int) obj > max) {
-                    result = RANDOM.nextInt((int) min, (int) max);
+                    result = RANDOM.nextInt(ClassUtils.toIntMin(min), ClassUtils.toIntMax(max));
                 } else {
                     result = obj;
                 }
             }
             case Byte i -> {
                 if ((byte) obj < min || (byte) obj > max) {
-                    result = (byte) RANDOM.nextLong(min, max);
+                    result = (byte) RANDOM.nextLong(ClassUtils.toByteMin(min), ClassUtils.toByteMax(max));
                 } else {
                     result = obj;
                 }
             }
             case Short i -> {
                 if ((short) obj < min || (short) obj > max) {
-                    result = (short) RANDOM.nextLong(min, max);
+                    result = (short) RANDOM.nextLong(ClassUtils.toShortMin(min), ClassUtils.toShortMax(max));
                 } else {
                     result = obj;
                 }
@@ -70,21 +71,21 @@ public class MinMaxAnnotationHandler implements AnnotationHandler {
             }
             case Character i -> {
                 if ((char) obj < min || (char) obj > max) {
-                    result = (char) RANDOM.nextLong(min, max);
+                    result = (char) RANDOM.nextLong(ClassUtils.toCharMin(min), ClassUtils.toCharMax(max));
                 } else {
                     result = obj;
                 }
             }
             case Double i -> {
                 if ((double) obj < min || (double) obj > max) {
-                    result = RANDOM.nextDouble(min, max);
+                    result = RANDOM.nextDouble(ClassUtils.toDoubleMax(min), ClassUtils.toDoubleMin(max));
                 } else {
                     result = obj;
                 }
             }
             case Float i -> {
                 if ((float) obj < min || (float) obj > max) {
-                    result = RANDOM.nextFloat(min, max);
+                    result = RANDOM.nextFloat(ClassUtils.toFloatMin(min), ClassUtils.toFloatMax(max));
                 } else {
                     result = obj;
                 }

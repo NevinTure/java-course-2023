@@ -74,7 +74,7 @@ public class CacheInvocationHandler implements InvocationHandler {
         try {
             Files.writeString(
                 cacheFile,
-                "Result of %s method: %s;%n".formatted(methodName, result),
+                "%s:%s%n".formatted(methodName, result),
                 StandardOpenOption.APPEND
             );
         } catch (IOException e) {
@@ -83,7 +83,7 @@ public class CacheInvocationHandler implements InvocationHandler {
     }
 
     private void writeToInMemoryCache(String methodName, Object result) {
-        String key = "Result of %s method".formatted(methodName);
+        String key = "%s".formatted(methodName);
         inMemoryStorage.computeIfAbsent(key, k -> new ArrayList<>()).add(result);
     }
 }

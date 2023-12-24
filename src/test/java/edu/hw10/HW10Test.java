@@ -72,7 +72,7 @@ public class HW10Test {
         proxy.fibAsLong(5);
         proxy.fibAsLong(10);
         proxy.fibAsLong(20);
-        List<Object> result = invocationHandler.getInMemoryStorage().get("Result of fibAsLong method");
+        List<Object> result = invocationHandler.getInMemoryStorage().get("fibAsLong");
 
         //then
         List<Object> expectedResult = List.of(5L, 55L, 6765L);
@@ -99,9 +99,9 @@ public class HW10Test {
 
         //then
         String expectedLine1 =
-            "Result of fibAsArray method: %s;".formatted(Arrays.toString(new long[] {1, 1, 2, 3, 5}));
-        String expectedLine2 = "Result of fibAsString method: %s;".formatted("55");
-        String expectedLine3 = "Result of fibAsString method: %s;".formatted("6765");
+            "fibAsArray:%s".formatted(Arrays.toString(new long[] {1, 1, 2, 3, 5}));
+        String expectedLine2 = "fibAsString:%s".formatted("55");
+        String expectedLine3 = "fibAsString:%s".formatted("6765");
         assertThat(result.get(0)).isEqualTo(expectedLine1);
         assertThat(result.get(1)).isEqualTo(expectedLine2);
         assertThat(result.get(2)).isEqualTo(expectedLine3);
