@@ -12,16 +12,16 @@ public class ClassUtils {
 
 
     @SuppressWarnings("MagicNumber")
-    public static Object getRandomPrimitive(Class<?> primitive) {
+    public static Object getAsPrimitive(Class<?> primitive) {
         return switch (primitive.getSimpleName()) {
             case "boolean" -> RANDOM.nextBoolean();
-            case "byte" -> (byte) RANDOM.nextInt(-128, 128);
-            case "short" -> (short) RANDOM.nextInt(-32768, 32768);
-            case "int" -> RANDOM.nextInt();
-            case "long" -> RANDOM.nextLong();
-            case "float" -> RANDOM.nextFloat();
-            case "double" -> RANDOM.nextDouble();
-            case "char" -> (char) RANDOM.nextInt(0, 65536);
+            case "byte" -> (byte) 0;
+            case "short" -> (short) 0;
+            case "int" -> 0;
+            case "long" -> (long) 0;
+            case "float" -> (float) 0;
+            case "double" -> (double) 0;
+            case "char" -> (char) 0;
             default -> null;
         };
     }

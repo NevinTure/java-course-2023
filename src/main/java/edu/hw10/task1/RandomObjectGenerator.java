@@ -73,7 +73,7 @@ public class RandomObjectGenerator {
     private Object getRandomObjectOfType(Parameter param) {
         Object preHandled;
         if (param.getType().isPrimitive()) {
-            preHandled = ClassUtils.getRandomPrimitive(param.getType());
+            preHandled = ClassUtils.getAsPrimitive(param.getType());
         } else {
             preHandled = null;
         }

@@ -39,61 +39,15 @@ public class MinMaxAnnotationHandler implements AnnotationHandler {
 
     @SuppressWarnings("CyclomaticComplexity")
     private Object getNewValue(Object obj) {
-        Object result;
-        switch (obj) {
-            case Integer i -> {
-                if ((int) obj < min || (int) obj > max) {
-                    result = RANDOM.nextInt(ClassUtils.toIntMin(min), ClassUtils.toIntMax(max));
-                } else {
-                    result = obj;
-                }
-            }
-            case Byte i -> {
-                if ((byte) obj < min || (byte) obj > max) {
-                    result = (byte) RANDOM.nextLong(ClassUtils.toByteMin(min), ClassUtils.toByteMax(max));
-                } else {
-                    result = obj;
-                }
-            }
-            case Short i -> {
-                if ((short) obj < min || (short) obj > max) {
-                    result = (short) RANDOM.nextLong(ClassUtils.toShortMin(min), ClassUtils.toShortMax(max));
-                } else {
-                    result = obj;
-                }
-            }
-            case Long i -> {
-                if ((long) obj < min || (long) obj > max) {
-                    result = RANDOM.nextLong(min, max);
-                } else {
-                    result = obj;
-                }
-            }
-            case Character i -> {
-                if ((char) obj < min || (char) obj > max) {
-                    result = (char) RANDOM.nextLong(ClassUtils.toCharMin(min), ClassUtils.toCharMax(max));
-                } else {
-                    result = obj;
-                }
-            }
-            case Double i -> {
-                if ((double) obj < min || (double) obj > max) {
-                    result = RANDOM.nextDouble(ClassUtils.toDoubleMax(min), ClassUtils.toDoubleMin(max));
-                } else {
-                    result = obj;
-                }
-            }
-            case Float i -> {
-                if ((float) obj < min || (float) obj > max) {
-                    result = RANDOM.nextFloat(ClassUtils.toFloatMin(min), ClassUtils.toFloatMax(max));
-                } else {
-                    result = obj;
-                }
-            }
-            default -> {
-                result = null;
-            }
-        }
-        return result;
+        return switch (obj) {
+            case Integer i -> RANDOM.nextInt(ClassUtils.toIntMin(min), ClassUtils.toIntMax(max));
+            case Byte i -> (byte) RANDOM.nextLong(ClassUtils.toByteMin(min), ClassUtils.toByteMax(max));
+            case Short i -> (short) RANDOM.nextLong(ClassUtils.toShortMin(min), ClassUtils.toShortMax(max));
+            case Long i -> RANDOM.nextLong(min, max);
+            case Character i -> (char) RANDOM.nextLong(ClassUtils.toCharMin(min), ClassUtils.toCharMax(max));
+            case Double i -> RANDOM.nextDouble(ClassUtils.toDoubleMax(min), ClassUtils.toDoubleMin(max));
+            case Float i -> RANDOM.nextFloat(ClassUtils.toFloatMin(min), ClassUtils.toFloatMax(max));
+            default -> false;
+        };
     }
 }
