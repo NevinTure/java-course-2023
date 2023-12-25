@@ -9,7 +9,7 @@ import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.dynamic.loading.ClassReloadingStrategy;
 import net.bytebuddy.implementation.FixedValue;
-import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.Test;
 import static net.bytebuddy.matcher.ElementMatchers.named;
@@ -52,17 +52,25 @@ public class HW11Test {
     }
 
     @Test
-    public void test() throws Exception {
-        Class<?> fibClass = new ByteBuddy().subclass(Object.class).name("FibonacciCalc")
-            .defineMethod("calculate", long.class, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC)
+    public void testFibonacciByteCodeAppender() throws Exception {
+        //given
+        String className = FibonacciByteCodeAppender.CLASS_NAME;
+        String methodName = FibonacciByteCodeAppender.METHOD_NAME;
+
+        //when
+        Class<?> fibClass = new ByteBuddy().subclass(Object.class).name(className)
+            .defineMethod(methodName, long.class, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC)
             .withParameter(int.class)
-            .intercept(MethodDelegation.to(new FibonacciByteCodeAppender()))
+            .intercept(new Implementation.Simple(new FibonacciByteCodeAppender()))
             .make()
             .load(getClass().getClassLoader(), ClassLoadingStrategy.Default.WRAPPER)
             .getLoaded();
 
-        Method calcMethod = fibClass.getDeclaredMethod("calculate", int.class);
-        long result = (long) calcMethod.invoke(null, 111);
-        System.out.println(result);
+        Method calcMethod = fibClass.getMethod("calculate", int.class);
+        long result = (long) calcMethod.invoke(null, 10);
+
+        //then
+        long expectedResult = 55;
+        assertThat(result).isEqualTo(expectedResult);
     }
 }
